@@ -1,12 +1,6 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // https://nuxt.com/docs/getting-started/upgrade#testing-nuxt-4
   future: { compatibilityVersion: 4 },
-
-  // https://nuxt.com/modules
-  modules: ['@nuxthub/core', '@nuxt/eslint'],
-
-  // https://eslint.nuxt.com
+  modules: ['@nuxthub/core', '@nuxt/eslint', '@nuxt/ui'],
   eslint: {
     config: {
       stylistic: {
@@ -15,7 +9,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // https://devtools.nuxt.com
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   postcss: {

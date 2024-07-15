@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'hand-drawn';
+  src: url('/hand-drawn-font.ttf');
+}
+
+body {
+  font-family: 'hand-drawn', Arial, sans-serif;
+}
+
+.phonetic-symbols {
+  font-family: Arial, sans-serif;
+}
