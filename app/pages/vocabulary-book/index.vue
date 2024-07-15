@@ -84,7 +84,7 @@ const list = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 p-2">
+  <div class="grid grid-cols-1 gap-2 p-2 md:grid-cols-2">
     <UCard v-for="(item, index) in list" :key="item.word + index">
       <template #header>{{ item.word }}</template>
       <div>
