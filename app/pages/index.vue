@@ -19,6 +19,7 @@ async function playAudio(word: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const phonetic = result.phonetics.filter((i: any) => i.audio && i.text)[0]
   const audio = new Audio(phonetic.audio)
+  alert(phonetic.audio)
   audio.play()
 }
 async function init() {
