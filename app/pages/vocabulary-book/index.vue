@@ -28,7 +28,7 @@ function playAudio(audioUrl: string) {
         <span
           class="phonetic-symbols cursor-pointer rounded p-1 hover:bg-green-400"
           @click="() => playAudio(item.phonetic.audio)"
-          >{{ item.phonetic.text }}</span
+          >/{{ item.phonetic.text }}/</span
         >
       </div>
       <div v-for="i of item.meanings" :key="i">{{ i }}</div>
