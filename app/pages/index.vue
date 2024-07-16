@@ -3,7 +3,7 @@ const router = useRouter()
 const route = useRoute()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let dictionary: any[] = []
-const word = ref(route.query.word ?? '')
+const word = ref(route.query.word ?? 'ing')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
 const isNotFound = ref(false)
