@@ -7,6 +7,7 @@ const word = ref(route.query.word ?? '')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
 function submit() {
+  router.replace({ query: { word: word.value } })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   submitList.value = dictionary.filter((i: any) =>
     i.headWord.includes(word.value),
@@ -14,14 +15,13 @@ function submit() {
 }
 
 async function playAudio(word: string) {
-  const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
-  const { data } = await useFetch(url + word)
+  const { data } = await useFetch('/api/dictvoice', {
+    query: { word },
+    responseType: 'blob',
+  })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = (data.value as any)[0] as any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const phonetic = result.phonetics.filter((i: any) => i.audio && i.text)[0]
-  const audio = new Audio(phonetic.audio)
-  alert(phonetic.audio)
+  const blobUrl = URL.createObjectURL(data.value as any)
+  const audio = new Audio(blobUrl)
   audio.play()
 }
 async function init() {
@@ -41,9 +41,6 @@ async function init() {
   }
 }
 
-function changeHandle() {
-  router.replace({ query: { word: word.value } })
-}
 onMounted(() => {
   init()
 })
@@ -70,7 +67,6 @@ onMounted(() => {
           color="primary"
           variant="outline"
           placeholder="请输入..."
-          @change="changeHandle"
           @keyup.enter="submit"
         />
       </div>
@@ -85,7 +81,7 @@ onMounted(() => {
           <span
             class="phonetic-symbols cursor-pointer rounded p-1 hover:bg-green-400"
             @click="() => playAudio(item.headWord)"
-            >/{{ item.content.word.content.usphone }}/</span
+            >/{{ item.content.word.content.ukphone }}/</span
           >
         </div>
         <div
