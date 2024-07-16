@@ -1,7 +1,9 @@
 <script setup lang="ts">
+const router = useRouter()
+const route = useRoute()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let dictionary: any[] = []
-const word = ref('')
+const word = ref(route.query.word ?? '')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
 function submit() {
@@ -34,6 +36,13 @@ async function init() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(data3 as any[]),
   ]
+  if (word.value) {
+    submit()
+  }
+}
+
+function changeHandle() {
+  router.replace({ query: { word: word.value } })
 }
 onMounted(() => {
   init()
@@ -57,10 +66,11 @@ onMounted(() => {
       <div class="flex items-center">
         <UInput
           v-model="word"
-          class="ml-2 flex-1"
+          class="flex-1"
           color="primary"
           variant="outline"
           placeholder="请输入..."
+          @change="changeHandle"
           @keyup.enter="submit"
         />
       </div>
