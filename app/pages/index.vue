@@ -6,12 +6,17 @@ let dictionary: any[] = []
 const word = ref(route.query.word ?? '')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
+const isNotFound = ref(false)
 function submit() {
+  isNotFound.value = false
   router.replace({ query: { word: word.value } })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   submitList.value = dictionary.filter((i: any) =>
     i.headWord.includes(word.value),
   )
+  if (!submitList.value.length) {
+    isNotFound.value = true
+  }
 }
 
 async function playAudio(word: string) {
@@ -90,6 +95,11 @@ onMounted(() => {
         >
           {{ `${i.pos}. ${i.tranCn}` }}
         </div>
+      </UCard>
+    </div>
+    <div class="p-2">
+      <UCard v-if="isNotFound">
+        <div class="text-red-300">数据库中暂无相关词汇!</div>
       </UCard>
     </div>
   </div>
