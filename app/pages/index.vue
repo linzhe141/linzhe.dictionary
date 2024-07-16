@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import part1 from '~/assets/cet6/cet6-1'
-import part2 from '~/assets/cet6/cet6-2'
-import part3 from '~/assets/cet6/cet6-3'
-
-const dictionary = [...part1, ...part2, ...part3]
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let dictionary: any[] = []
 const word = ref('')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
@@ -24,6 +21,22 @@ async function playAudio(word: string) {
   const audio = new Audio(phonetic.audio)
   audio.play()
 }
+async function init() {
+  const data1 = await $fetch('/cet6/1.json')
+  const data2 = await $fetch('/cet6/2.json')
+  const data3 = await $fetch('/cet6/3.json')
+  dictionary = [
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...(data1 as any[]),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...(data2 as any[]),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...(data3 as any[]),
+  ]
+}
+onMounted(() => {
+  init()
+})
 </script>
 
 <template>
