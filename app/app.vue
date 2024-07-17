@@ -1,6 +1,6 @@
 <template>
-  <NuxtLayout name="root-layout">
-    <!-- router-view 入口？ -->
+  <!-- router-view 入口？ -->
+  <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>

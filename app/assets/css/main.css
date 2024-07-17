@@ -14,3 +14,112 @@ body {
 .phonetic-symbols {
   font-family: Arial, sans-serif;
 }
+
+@property --gradient-end {
+  syntax: '<percentage>';
+  initial-value: 10%;
+  inherits: false;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    --gradient-end: 10%;
+  }
+  50% {
+    --gradient-end: 90%;
+  }
+  100% {
+    --gradient-end: 10%;
+  }
+}
+
+.gradient {
+  background-image: linear-gradient(
+    to right,
+    rgba(74, 222, 128, 1) 0%,
+    white var(--gradient-end),
+    rgba(74, 222, 128, 1) 100%
+  );
+  animation: gradientAnimation 2s infinite;
+}
+
+@keyframes clickUpAndDown {
+  0% {
+    transform: translateY(0px);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(0px);
+  }
+  75% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.click-icon {
+  animation: clickUpAndDown 3s infinite linear;
+}
+
+@keyframes textShowUp {
+  from {
+    letter-spacing: -50px;
+    filter: blur(10px);
+  }
+  to {
+    letter-spacing: 10px;
+    filter: blur(0px);
+  }
+}
+
+.text-content {
+  animation: textShowUp 1.5s forwards;
+}
+
+@keyframes contrastDown {
+  from {
+    filter: contrast(5);
+  }
+  to {
+    filter: contrast(1);
+  }
+}
+
+.contrast-content {
+  animation: contrastDown 1.5s forwards;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  height: 0.6em;
+  width: 0.6em;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  --tw-bg-opacity: 1;
+  background-color: rgb(51 65 85 / 1);
+}
+
+::-webkit-scrollbar-thumb {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / 1);
+  border-radius: 0.6em;
+}
+
+.dark ::-webkit-scrollbar-track {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / 1);
+}
+
+::-webkit-scrollbar-track {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / 1);
+}
+
+::selection {
+  background-color: rgb(0 193 106 / 0.4);
+}

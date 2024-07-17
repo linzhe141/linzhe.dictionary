@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: 'root-layout',
+})
 const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 const { data } = await useFetch(url + 'card')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,107 +1,32 @@
-<script setup lang="ts">
-const router = useRouter()
-const route = useRoute()
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let dictionary: any[] = []
-const word = ref(route.query.word ?? 'ing')
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const submitList = ref<any[]>([])
-const isNotFound = ref(false)
-function submit() {
-  isNotFound.value = false
-  router.replace({ query: { word: word.value } })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submitList.value = dictionary.filter((i: any) =>
-    i.headWord.includes(word.value),
-  )
-  if (!submitList.value.length) {
-    isNotFound.value = true
-  }
-}
-
-async function playAudio(word: string) {
-  const { data } = await useFetch('/api/dictvoice', {
-    query: { word },
-    responseType: 'blob',
-  })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const blobUrl = URL.createObjectURL(data.value as any)
-  const audio = new Audio(blobUrl)
-  audio.play()
-}
-async function init() {
-  const data1 = await $fetch('/cet6/1.json')
-  const data2 = await $fetch('/cet6/2.json')
-  const data3 = await $fetch('/cet6/3.json')
-  dictionary = [
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(data1 as any[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(data2 as any[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(data3 as any[]),
-  ]
-  if (word.value) {
-    submit()
-  }
-}
-
-onMounted(() => {
-  init()
-})
-</script>
-
 <template>
-  <div>
-    <!-- TODO -->
-    <!-- <div class="p-2">
-      <UCard>
-        <ULink
-          to="/vocabulary-book"
-          active-class="text-primary"
-          inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-        >
-          生词本
-        </ULink>
-      </UCard>
-    </div> -->
-    <div class="p-2">
-      <div class="flex items-center">
-        <UInput
-          v-model="word"
-          class="flex-1"
-          color="primary"
-          variant="outline"
-          placeholder="请输入..."
-          @keyup.enter="submit"
-        />
-      </div>
-      <div>
-        <UButton class="mt-2 text-white" block @click="submit">翻译</UButton>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 gap-2 p-2 md:grid-cols-2">
-      <UCard v-for="item of submitList" :key="item.headWord">
-        <template #header>{{ item.headWord }}</template>
-        <div class="mb-2">
-          <span
-            class="phonetic-symbols cursor-pointer rounded p-1 hover:bg-green-400"
-            @click="() => playAudio(item.headWord)"
-            >/{{ item.content.word.content.ukphone }}/</span
-          >
-        </div>
+  <div
+    class="contrast-content flex h-screen items-center justify-center overflow-hidden bg-green-400 text-[#213547]"
+  >
+    <div className="flex flex-col items-center justify-center">
+      <ULink to="/home">
         <div
-          v-for="i of item.content.word.content.trans"
-          :key="`${i.pos}.${i.tranCn}`"
+          className="text-content relative flex flex-col items-center justify-center"
         >
-          {{ `${i.pos}. ${i.tranCn}` }}
+          <div className="click-icon absolute -right-0 top-0">
+            <svg
+              width="64"
+              height="64"
+              fill="#213547"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M509.488762 407.210667l4.047238 1.462857 375.954286 146.968381a73.142857 73.142857 0 0 1-11.727238 139.727238l-4.242286 0.755809-130.852572 19.334096-13.458285 124.976762a73.142857 73.142857 0 0 1-136.728381 27.599238l-2.023619-3.974096-169.569524-355.815619a73.142857 73.142857 0 0 1 88.600381-101.034666z m-22.576762 69.583238l169.569524 355.815619 19.529143-181.248 186.831238-27.599238-375.954286-146.968381zM414.47619 170.666667c134.119619 0 242.95619 108.30019 243.809524 242.224762l-75.995428-29.720381a170.666667 170.666667 0 1 0-178.93181 201.630476l34.499048 72.387047c-7.704381 0.731429-15.481905 1.097143-23.381334 1.097143-134.656 0-243.809524-109.153524-243.809523-243.809524S279.82019 170.666667 414.47619 170.666667z"
+                p-id="3348"
+              ></path>
+            </svg>
+          </div>
+          <h1 className="text-content mb-4 text-6xl">Dictionary</h1>
+          <span className="text-content text-xl">好记性不如烂笔头</span>
         </div>
-      </UCard>
-    </div>
-    <div class="p-2">
-      <UCard v-if="isNotFound">
-        <div class="text-red-300">数据库中暂无相关词汇!</div>
-      </UCard>
+        <div class="gradient mt-2 h-2 w-[400px]"></div>
+      </ULink>
     </div>
   </div>
 </template>
