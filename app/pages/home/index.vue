@@ -44,12 +44,16 @@ async function init() {
     ...(data2 as any[]),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(data3 as any[]),
-  ]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ].map((i: any) => ({ ...i, showMeaning: false }))
   if (word.value) {
     submit()
   }
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function clickLight(item: any) {
+  item.showMeaning = !item.showMeaning
+}
 onMounted(() => {
   init()
 })
@@ -86,7 +90,19 @@ onMounted(() => {
     </div>
     <div class="grid grid-cols-1 gap-2 p-2 md:grid-cols-2">
       <UCard v-for="item of submitList" :key="item.headWord">
-        <template #header>{{ item.headWord }}</template>
+        <template #header>
+          <div class="flex items-center justify-between">
+            <div>{{ item.headWord }}</div>
+            <div
+              :class="{ light: item.showMeaning }"
+              class="bg-green-radial-gradient relative flex h-full cursor-pointer items-center justify-center hover:rounded-full"
+              @click="() => clickLight(item)"
+            >
+              <div class="glowing"></div>
+              <UIcon name="i-heroicons-light-bulb" class="mt-2 size-5" />
+            </div>
+          </div>
+        </template>
         <div class="mb-2">
           <span
             class="phonetic-symbols cursor-pointer rounded p-1 hover:bg-green-400"
@@ -94,12 +110,15 @@ onMounted(() => {
             >/{{ item.content.word.content.ukphone }}/</span
           >
         </div>
-        <div
-          v-for="i of item.content.word.content.trans"
-          :key="`${i.pos}.${i.tranCn}`"
-        >
-          {{ `${i.pos}. ${i.tranCn}` }}
-        </div>
+        <template v-if="item.showMeaning">
+          <div
+            v-for="i of item.content.word.content.trans"
+            :key="`${i.pos}.${i.tranCn}`"
+          >
+            {{ `${i.pos}. ${i.tranCn}` }}
+          </div>
+        </template>
+        <template v-else><div>************</div></template>
       </UCard>
     </div>
     <div class="p-2">
