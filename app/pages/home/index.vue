@@ -57,7 +57,9 @@ function formatWords(data: any[]) {
     examples: [{ sentence: i.ex, trans: i.tran }],
   }))
 }
+const initLoading = ref(true)
 async function init() {
+  initLoading.value = true
   const data1 = await $fetch('/words/cet6-1.json')
   const data2 = await $fetch('/words/cet6-2.json')
   const data3 = await $fetch('/words/cet6-3.json')
@@ -76,6 +78,7 @@ async function init() {
   if (word.value) {
     submit()
   }
+  initLoading.value = false
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function clickLight(item: any) {
@@ -115,8 +118,15 @@ onMounted(() => {
         <UButton class="mt-2 text-white" block @click="submit">翻译</UButton>
       </div>
     </div>
-    <div class="grid grid-cols-1 gap-2 p-2 md:grid-cols-2">
-      <UCard v-for="item of submitList" :key="item.word">
+    <div v-if="!initLoading" class="grid grid-cols-1 gap-2 p-2 lg:grid-cols-2">
+      <UCard
+        v-for="(item, index) in submitList"
+        :key="item.word"
+        :class="{
+          'lg:col-span-2':
+            submitList.length % 2 !== 0 && index === submitList.length - 1,
+        }"
+      >
         <template #header>
           <div class="flex items-center justify-between">
             <div>{{ item.word }}</div>
@@ -149,11 +159,27 @@ onMounted(() => {
               <span class="mr-2">翻译：</span>{{ i.trans }}
             </div>
           </div>
-          <div></div>
         </template>
         <template v-else>
           <div>************</div>
         </template>
+      </UCard>
+    </div>
+    <div v-else class="grid grid-cols-1 gap-2 p-2 lg:grid-cols-2">
+      <UCard v-for="(item, index) in 4" :key="index">
+        <template #header>
+          <div class="flex items-center justify-between">
+            <USkeleton class="h-4 w-[250px]" />
+          </div>
+        </template>
+        <div class="mb-2">
+          <USkeleton class="h-4 w-[200px]" />
+        </div>
+        <div class="mt-2">
+          <USkeleton class="h-4 w-[350px]" />
+        </div>
+        <div class="mt-2"><USkeleton class="h-4 w-[360px]" /></div>
+        <div class="mt-2"><USkeleton class="h-4 w-[360px]" /></div>
       </UCard>
     </div>
     <div class="p-2">
