@@ -6,7 +6,7 @@ const router = useRouter()
 const route = useRoute()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let dictionary: any[] = []
-const word = ref(route.query.word ?? 'ing')
+const word = ref(route.query.word ?? 'zoo')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
 const isNotFound = ref(false)
@@ -15,9 +15,7 @@ function submit() {
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submitList.value = dictionary.filter((i: any) =>
-    i.headWord.includes(word.value),
-  )
+  submitList.value = dictionary.filter((i: any) => i.word.includes(word.value))
   if (!submitList.value.length) {
     isNotFound.value = true
   }
@@ -33,19 +31,48 @@ async function playAudio(word: string) {
   const audio = new Audio(blobUrl)
   audio.play()
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatCET(data: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.map((i: any) => ({
+    word: i.headWord,
+    symbols: i.content.word.content.ukphone,
+    trans: i.content.word.content.trans.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => `${item.pos}. ${item.tranCn}`,
+    ), // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    examples: i.content.word.content.sentence?.sectences?.map((item: any) => ({
+      sentence: item.sentences,
+      trans: item.sCn,
+    })),
+  }))
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatWords(data: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.map((i: any) => ({
+    word: i.word,
+    symbols: i.symbols,
+    trans: [`${i.part} ${i.mean}`],
+    examples: [{ sentence: i.ex, trans: i.tran }],
+  }))
+}
 async function init() {
-  const data1 = await $fetch('/cet6/1.json')
-  const data2 = await $fetch('/cet6/2.json')
-  const data3 = await $fetch('/cet6/3.json')
+  const data1 = await $fetch('/words/cet6-1.json')
+  const data2 = await $fetch('/words/cet6-2.json')
+  const data3 = await $fetch('/words/cet6-3.json')
+  const data4 = await $fetch('/words/words.json')
   dictionary = [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(data1 as any[]),
+    ...formatWords(data4 as any[]),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(data2 as any[]),
+    ...formatCET(data1 as any[]),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...(data3 as any[]),
+    ...formatCET(data2 as any[]),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ].map((i: any) => ({ ...i, showMeaning: false }))
+    ...formatCET(data3 as any[]),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ].map((i: any) => ({ ...i, showMeaning: true }))
   if (word.value) {
     submit()
   }
@@ -89,10 +116,10 @@ onMounted(() => {
       </div>
     </div>
     <div class="grid grid-cols-1 gap-2 p-2 md:grid-cols-2">
-      <UCard v-for="item of submitList" :key="item.headWord">
+      <UCard v-for="item of submitList" :key="item.word">
         <template #header>
           <div class="flex items-center justify-between">
-            <div>{{ item.headWord }}</div>
+            <div>{{ item.word }}</div>
             <div
               :class="{ light: item.showMeaning }"
               class="bg-green-radial-gradient relative flex h-full cursor-pointer items-center justify-center hover:rounded-full"
@@ -106,19 +133,27 @@ onMounted(() => {
         <div class="mb-2">
           <span
             class="phonetic-symbols cursor-pointer rounded p-1 hover:bg-green-400"
-            @click="() => playAudio(item.headWord)"
-            >/{{ item.content.word.content.ukphone }}/</span
+            @click="() => playAudio(item.word)"
+            >/{{ item.symbols }}/</span
           >
         </div>
         <template v-if="item.showMeaning">
-          <div
-            v-for="i of item.content.word.content.trans"
-            :key="`${i.pos}.${i.tranCn}`"
-          >
-            {{ `${i.pos}. ${i.tranCn}` }}
+          <div v-for="i of item.trans" :key="i" class="mt-2">
+            {{ i }}
           </div>
+          <div v-for="i of item.examples" :key="i">
+            <div class="mt-2">
+              <span class="mr-2">例句：</span>{{ i.sentence }}
+            </div>
+            <div class="mt-2">
+              <span class="mr-2">翻译：</span>{{ i.trans }}
+            </div>
+          </div>
+          <div></div>
         </template>
-        <template v-else><div>************</div></template>
+        <template v-else>
+          <div>************</div>
+        </template>
       </UCard>
     </div>
     <div class="p-2">
