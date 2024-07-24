@@ -28,7 +28,7 @@ function submit() {
     dictionary.filter((i) => i.word.includes(word.value)),
   ).map((i) => ({
     ...i,
-    word: i.word.replace(
+    colorWord: i.word.replace(
       new RegExp(word.value),
       `<span class="text-green-500">${word.value}</span>`,
     ),
@@ -140,7 +140,7 @@ onMounted(() => {
       >
         <template #header>
           <div class="flex items-center justify-between">
-            <div v-html="item.word"></div>
+            <div v-html="item.colorWord"></div>
             <div
               :class="{ light: item.showMeaning }"
               class="bg-green-radial-gradient relative flex h-full cursor-pointer items-center justify-center hover:rounded-full"
