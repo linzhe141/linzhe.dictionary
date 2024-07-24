@@ -7,9 +7,10 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "npm run db:generate",
+    "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "migrate:deploy": "nuxi dev --remote"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.3.13",
