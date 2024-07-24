@@ -17,4 +17,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  hub: {
+    database: true,
+  },
 })
