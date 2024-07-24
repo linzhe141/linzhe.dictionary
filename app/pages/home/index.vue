@@ -6,16 +6,37 @@ const router = useRouter()
 const route = useRoute()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let dictionary: any[] = []
-const word = ref(route.query.word ?? 'zoo')
+const word = ref<string>((route.query.word as string) ?? 'zoo')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const submitList = ref<any[]>([])
 const isNotFound = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sortStringsByOf(data: any[]): string[] {
+  return data.sort((a, b) => {
+    const indexA = a.word.indexOf(word.value)
+    const indexB = b.word.indexOf(word.value)
+    if (indexA === indexB) {
+      return a.word.localeCompare(b.word)
+    }
+    return indexA - indexB
+  })
+}
 function submit() {
   if (word.value === '') return
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submitList.value = dictionary.filter((i: any) => i.word.includes(word.value))
+  submitList.value = sortStringsByOf(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dictionary.filter((i: any) => i.word.includes(word.value)),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ).map((i: any) => ({
+    ...i,
+    word: i.word.replace(
+      new RegExp(word.value),
+      `<span class="text-green-500">${word.value}</span>`,
+    ),
+  }))
+
   if (!submitList.value.length) {
     isNotFound.value = true
   }
@@ -129,7 +150,7 @@ onMounted(() => {
       >
         <template #header>
           <div class="flex items-center justify-between">
-            <div>{{ item.word }}</div>
+            <div v-html="item.word"></div>
             <div
               :class="{ light: item.showMeaning }"
               class="bg-green-radial-gradient relative flex h-full cursor-pointer items-center justify-center hover:rounded-full"
