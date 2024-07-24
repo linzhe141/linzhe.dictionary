@@ -121,7 +121,13 @@ onMounted(() => {
         />
       </div>
       <div>
-        <UButton class="mt-2 text-white" block @click="submit">翻译</UButton>
+        <UButton
+          class="mt-2 text-white"
+          block
+          :disabled="initLoading"
+          @click="submit"
+          >翻译</UButton
+        >
       </div>
     </div>
     <div v-if="!initLoading" class="grid grid-cols-1 gap-2 p-2 lg:grid-cols-2">
