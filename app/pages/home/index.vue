@@ -1,17 +1,16 @@
 <script setup lang="ts">
+import type { CET6_WORD, GithubWord, Word } from '~~/types'
+
 definePageMeta({
   layout: 'root-layout',
 })
 const router = useRouter()
 const route = useRoute()
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let dictionary: any[] = []
+let dictionary: Word[] = []
 const word = ref<string>((route.query.word as string) ?? 'zoo')
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const submitList = ref<any[]>([])
+const submitList = ref<Word[]>([])
 const isNotFound = ref(false)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sortStringsByOf(data: any[]): string[] {
+function sortStringsByOf(data: Word[]) {
   return data.sort((a, b) => {
     const indexA = a.word.indexOf(word.value)
     const indexB = b.word.indexOf(word.value)
@@ -26,10 +25,8 @@ function submit() {
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
   submitList.value = sortStringsByOf(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    dictionary.filter((i: any) => i.word.includes(word.value)),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ).map((i: any) => ({
+    dictionary.filter((i) => i.word.includes(word.value)),
+  ).map((i) => ({
     ...i,
     word: i.word.replace(
       new RegExp(word.value),
@@ -47,31 +44,25 @@ async function playAudio(word: string) {
     query: { word },
     responseType: 'blob',
   })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const blobUrl = URL.createObjectURL(data.value as any)
+  const blobUrl = URL.createObjectURL(data.value as Blob)
   const audio = new Audio(blobUrl)
   audio.play()
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatCET(data: any[]) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return data.map((i: any) => ({
+function formatCET(data: CET6_WORD[]): Word[] {
+  return data.map((i) => ({
     word: i.headWord,
     symbols: i.content.word.content.ukphone,
     trans: i.content.word.content.trans.map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (item: any) => `${item.pos}. ${item.tranCn}`,
-    ), // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    examples: i.content.word.content.sentence?.sectences?.map((item: any) => ({
-      sentence: item.sentences,
+      (item) => `${item.pos}. ${item.tranCn}`,
+    ),
+    examples: i.content.word.content.sentence?.sentences?.map((item) => ({
+      sentence: item.sContent,
       trans: item.sCn,
     })),
   }))
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatWords(data: any[]) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return data.map((i: any) => ({
+function formatWords(data: GithubWord[]) {
+  return data.map((i) => ({
     word: i.word,
     symbols: i.symbols,
     trans: [`${i.part} ${i.mean}`],
@@ -81,28 +72,22 @@ function formatWords(data: any[]) {
 const initLoading = ref(true)
 async function init() {
   initLoading.value = true
-  const data1 = await $fetch('/words/cet6-1.json')
-  const data2 = await $fetch('/words/cet6-2.json')
-  const data3 = await $fetch('/words/cet6-3.json')
-  const data4 = await $fetch('/words/words.json')
+  const data1: CET6_WORD[] = await $fetch('/words/cet6-1.json')
+  const data2: CET6_WORD[] = await $fetch('/words/cet6-2.json')
+  const data3: CET6_WORD[] = await $fetch('/words/cet6-3.json')
+  const data4: GithubWord[] = await $fetch('/words/words.json')
   dictionary = [
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...formatWords(data4 as any[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...formatCET(data1 as any[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...formatCET(data2 as any[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...formatCET(data3 as any[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ].map((i: any) => ({ ...i, showMeaning: true }))
+    ...formatWords(data4),
+    ...formatCET(data1),
+    ...formatCET(data2),
+    ...formatCET(data3),
+  ].map((i) => ({ ...i, showMeaning: true }))
   if (word.value) {
     submit()
   }
   initLoading.value = false
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function clickLight(item: any) {
+function clickLight(item: Word) {
   item.showMeaning = !item.showMeaning
 }
 onMounted(() => {
@@ -172,7 +157,7 @@ onMounted(() => {
           <div v-for="i of item.trans" :key="i" class="mt-2">
             {{ i }}
           </div>
-          <div v-for="i of item.examples" :key="i">
+          <div v-for="i of item.examples" :key="i.sentence">
             <div class="mt-2">
               <span class="mr-2">例句：</span>{{ i.sentence }}
             </div>
