@@ -7,6 +7,7 @@ export default withNuxt(eslintPluginPrettierRecommended, [
     rules: {
       '@stylistic/arrow-parens': 'off',
       'vue/no-v-html': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
 ])

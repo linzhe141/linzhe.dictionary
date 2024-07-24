@@ -97,18 +97,17 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- TODO -->
-    <!-- <div class="p-2">
+    <div class="p-2">
       <UCard>
         <ULink
-          to="/vocabulary-book"
+          to="/todos"
           active-class="text-primary"
           inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
         >
-          生词本
+          TODO
         </ULink>
       </UCard>
-    </div> -->
+    </div>
     <div class="p-2">
       <div class="flex items-center">
         <UInput

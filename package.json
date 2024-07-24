@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.3.13",
@@ -21,6 +22,8 @@
   "devDependencies": {
     "@nuxt/eslint-config": "^0.3.13",
     "autoprefixer": "^10.4.19",
+    "drizzle-kit": "^0.23.0",
+    "drizzle-orm": "^0.32.1",
     "eslint": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
