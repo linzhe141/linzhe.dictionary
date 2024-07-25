@@ -8,6 +8,13 @@
       "when": 1721812409302,
       "tag": "0000_safe_hawkeye",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1721885659152,
+      "tag": "0001_dusty_carnage",
+      "breakpoints": true
     }
   ]
 }

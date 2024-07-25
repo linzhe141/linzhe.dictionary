@@ -39,15 +39,6 @@ function submit() {
   }
 }
 
-async function playAudio(word: string) {
-  const { data } = await useFetch('/api/dictvoice', {
-    query: { word },
-    responseType: 'blob',
-  })
-  const blobUrl = URL.createObjectURL(data.value as Blob)
-  const audio = new Audio(blobUrl)
-  audio.play()
-}
 function formatCET(data: CET6_WORD[]): Word[] {
   return data.map((i) => ({
     word: i.headWord,
@@ -69,6 +60,7 @@ function formatWords(data: GithubWord[]) {
     examples: [{ sentence: i.ex, trans: i.tran }],
   }))
 }
+
 const initLoading = ref(true)
 async function init() {
   initLoading.value = true
@@ -87,9 +79,19 @@ async function init() {
   }
   initLoading.value = false
 }
-function clickLight(item: Word) {
-  item.showMeaning = !item.showMeaning
+
+const toast = useToast()
+async function addWordToCheatSheet(word: Word) {
+  const { data } = await useFetch('/api/vocabularyCheatSheet', {
+    method: 'post',
+    body: { ...word, trans: word.trans.join(';') },
+  })
+  toast.add({
+    title: data.value?.msg,
+    color: data.value?.success ? 'primary' : 'red',
+  })
 }
+
 onMounted(() => {
   init()
 })
@@ -100,11 +102,11 @@ onMounted(() => {
     <div class="p-2">
       <UCard>
         <ULink
-          to="/todos"
+          to="/vocabulary-cheat-sheet"
           active-class="text-primary"
           inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
         >
-          TODO
+          生词本
         </ULink>
       </UCard>
     </div>
@@ -141,25 +143,28 @@ onMounted(() => {
         <template #header>
           <div class="flex items-center justify-between">
             <div v-html="item.colorWord"></div>
-            <div
-              :class="{ light: item.showMeaning }"
-              class="bg-green-radial-gradient relative flex h-full cursor-pointer items-center justify-center hover:rounded-full"
-              @click="() => clickLight(item)"
-            >
-              <div class="glowing"></div>
-              <UIcon name="i-heroicons-light-bulb" class="mt-2 size-5" />
-            </div>
           </div>
         </template>
-        <div class="mb-2 flex items-center">
-          <span class="phonetic-symbols mr-2 rounded p-1"
-            >/{{ item.symbols || '暂无音标' }}/</span
+        <div class="mb-2 flex justify-between">
+          <div class="flex items-center">
+            <span class="phonetic-symbols mr-2 rounded p-1">
+              /{{ item.symbols || '暂无音标' }}/
+            </span>
+            <UIcon
+              name="i-heroicons-speaker-wave"
+              class="cursor-pointer hover:text-green-400"
+              @click="() => playAudio(item.word)"
+            />
+          </div>
+          <UButton
+            icon="i-heroicons-plus-circle"
+            size="sm"
+            color="gray"
+            variant="solid"
+            @click="() => addWordToCheatSheet(item)"
           >
-          <UIcon
-            name="i-heroicons-speaker-wave"
-            class="cursor-pointer hover:text-green-400"
-            @click="() => playAudio(item.word)"
-          />
+            添加至生词本
+          </UButton>
         </div>
         <template v-if="item.showMeaning">
           <div v-for="i of item.trans" :key="i" class="mt-2">

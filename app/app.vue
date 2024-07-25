@@ -1,6 +1,7 @@
 <template>
-  <!-- router-view 入口？ -->
   <NuxtLayout>
+    <!-- router-view 入口？ -->
     <NuxtPage />
   </NuxtLayout>
+  <UNotifications />
 </template>

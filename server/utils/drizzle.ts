@@ -9,3 +9,5 @@ export function useDrizzle() {
 
 export { sql, eq, and, or } from 'drizzle-orm'
 export type Todo = typeof schema.todos.$inferSelect
+export type VocabularyCheatSheet =
+  typeof schema.vocabularyCheatSheet.$inferSelect
