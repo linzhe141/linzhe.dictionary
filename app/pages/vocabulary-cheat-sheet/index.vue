@@ -67,5 +67,10 @@ function clickLight(item: any) {
         </template>
       </UCard>
     </div>
+    <div v-if="wordsList?.length === 0">
+      <UCard>
+        <div class="text-red-300">当前没有收录的生词!</div>
+      </UCard>
+    </div>
   </div>
 </template>
