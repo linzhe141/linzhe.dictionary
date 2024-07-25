@@ -151,12 +151,15 @@ onMounted(() => {
             </div>
           </div>
         </template>
-        <div class="mb-2">
-          <span
-            class="phonetic-symbols cursor-pointer rounded p-1 hover:bg-green-400"
-            @click="() => playAudio(item.word)"
-            >/{{ item.symbols }}/</span
+        <div class="mb-2 flex items-center">
+          <span class="phonetic-symbols mr-2 rounded p-1"
+            >/{{ item.symbols || '暂无音标' }}/</span
           >
+          <UIcon
+            name="i-heroicons-speaker-wave"
+            class="cursor-pointer hover:text-green-400"
+            @click="() => playAudio(item.word)"
+          />
         </div>
         <template v-if="item.showMeaning">
           <div v-for="i of item.trans" :key="i" class="mt-2">
