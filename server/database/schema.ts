@@ -29,3 +29,15 @@ export const vocabularyCheatSheet = sqliteTable(
 export function lower(data: AnySQLiteColumn): SQL {
   return sql`lower(${data})`
 }
+
+export const users = sqliteTable(
+  'users',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    name: text('name').notNull(),
+    password: text('password').notNull(),
+  },
+  (table) => ({
+    nameUniqueIndex: uniqueIndex('nameUniqueIndex').on(lower(table.name)),
+  }),
+)
