@@ -7,10 +7,10 @@
         <div
           className="text-content relative flex flex-col items-center justify-center"
         >
-          <div className="click-icon absolute -right-0 top-0">
+          <div className="click-icon absolute right-[50px] top-[75px]">
             <svg
-              width="64"
-              height="64"
+              width="32"
+              height="32"
               fill="#213547"
               viewBox="0 0 1024 1024"
               version="1.1"
