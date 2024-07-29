@@ -1,6 +1,7 @@
 import { type VocabularyCheatSheet } from '~~/server/utils/drizzle'
 
 export default eventHandler(async (event) => {
+  await isAuth(event.context.user)
   const { id } = getRouterParams(event)
   const { word, symbols, trans }: VocabularyCheatSheet = await readBody(event)
 

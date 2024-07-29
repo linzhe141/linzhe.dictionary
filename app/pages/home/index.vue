@@ -79,13 +79,16 @@ async function init() {
   }
   initLoading.value = false
 }
-
 const toast = useToast()
 async function addWordToCheatSheet(word: Word) {
-  const { data } = await useFetch('/api/vocabularyCheatSheet', {
+  const { data, error, status } = await useFetch('/api/vocabularyCheatSheet', {
     method: 'post',
     body: { ...word, trans: word.trans.join(';') },
   })
+  if (status.value === 'error' && error.value?.statusCode === 401) {
+    // @ts-expect-error
+    return navigateTo({ path: 'login', query: { callback: route.name } })
+  }
   toast.add({
     title: data.value?.msg,
     color: data.value?.success ? 'primary' : 'red',

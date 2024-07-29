@@ -14,18 +14,13 @@ export const todos = sqliteTable('todos', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 })
 
-export const vocabularyCheatSheet = sqliteTable(
-  'vocabulary_cheat_sheet',
-  {
-    id: integer('id').primaryKey({ autoIncrement: true }),
-    word: text('word').notNull(),
-    symbols: text('symbols'),
-    trans: text('trans').notNull(),
-  },
-  (table) => ({
-    wordUniqueIndex: uniqueIndex('wordUniqueIndex').on(lower(table.word)),
-  }),
-)
+export const vocabularyCheatSheet = sqliteTable('vocabulary_cheat_sheet', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  word: text('word').notNull(),
+  symbols: text('symbols'),
+  trans: text('trans').notNull(),
+  userId: integer('user_id').references(() => users.id),
+})
 export function lower(data: AnySQLiteColumn): SQL {
   return sql`lower(${data})`
 }

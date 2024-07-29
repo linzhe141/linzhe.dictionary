@@ -15,5 +15,11 @@ export default eventHandler(async (event) => {
       msg: '密码或帐号不正确',
     }
   }
-  return user
+  const data = { id: user.id, name: user.name }
+  setCookie(event, 'user', JSON.stringify(data))
+  return {
+    success: true,
+    data: data,
+    msg: '登录成功',
+  }
 })

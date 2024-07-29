@@ -1,11 +1,20 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'root-layout',
+  middleware: 'auth',
 })
 
-const { data: words, refresh: _refresh } = await useFetch(
-  '/api/vocabularyCheatSheet',
-)
+const route = useRoute()
+const {
+  data: words,
+  refresh: _refresh,
+  status,
+  error,
+} = await useFetch('/api/vocabularyCheatSheet')
+if (status.value === 'error' && error.value?.statusCode === 401) {
+  // @ts-expect-error
+  navigateTo({ path: 'login', query: { callback: route.name } })
+}
 const wordsList = ref(words.value?.map((i) => ({ ...i, showMeaning: true })))
 
 function clickLight(item: any) {
@@ -18,7 +27,7 @@ function clickLight(item: any) {
     <UBreadcrumb
       class="text-lg"
       divider="/"
-      :links="[{ label: '翻译', to: '/home' }, { label: '生词本' }]"
+      :links="[{ label: '主页', to: '/home' }, { label: '生词本' }]"
     />
     <div class="grid grid-cols-1 gap-2 p-2 lg:grid-cols-2">
       <UCard

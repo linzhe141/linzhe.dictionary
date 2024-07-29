@@ -12,5 +12,9 @@ export default eventHandler(async (event) => {
     .returning()
     .get()
 
-  return user
+  return {
+    success: true,
+    data: user,
+    msg: '注册成功',
+  }
 })

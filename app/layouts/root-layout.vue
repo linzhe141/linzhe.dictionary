@@ -1,4 +1,7 @@
 <script setup lang="ts">
+const user = useCookie('user')
+// @ts-expect-error
+const name = (user.value ?? {}).name
 const showIcon = ref(false)
 function toTop() {
   window.scrollTo({
@@ -23,6 +26,12 @@ onUnmounted(() => {
       <h1 class="text-center text-2xl text-white">
         <ULink to="/"> linzhe dictionary!!! </ULink>
       </h1>
+      <UAvatar
+        v-if="name"
+        class="absolute right-2 top-1"
+        :alt="name"
+        size="xs"
+      />
     </div>
     <div class="mt-8"><slot /></div>
     <div class="fixed bottom-2 right-2" @click="toTop">

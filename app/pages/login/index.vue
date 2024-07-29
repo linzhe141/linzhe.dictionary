@@ -1,13 +1,27 @@
 <script lang="ts" setup>
-import type { FormSubmitEvent } from '#ui/types'
-
+const route = useRoute()
 const state = reactive({
   name: undefined,
   password: undefined,
 })
-async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with event.data
-  console.log(event.data)
+
+async function registerHandle() {
+  const { data } = useFetch('/api/users', { method: 'POST', body: state })
+  console.log(data.value)
+}
+const toast = useToast()
+async function onSubmit() {
+  const data = await $fetch('/api/users/auth', { method: 'POST', body: state })
+  if (data?.success) {
+    // @ts-expect-error
+    const callback: string = route.query.callback ?? ''
+    if (callback) navigateTo(callback)
+    else navigateTo('/home')
+  }
+  toast.add({
+    title: data?.msg,
+    color: data?.success ? 'primary' : 'red',
+  })
 }
 </script>
 
@@ -28,7 +42,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 
           <div class="flex justify-between">
             <UButton type="submit"> 登录 </UButton>
-            <UButton type="submit"> 注册 </UButton>
+            <UButton @click="registerHandle"> 注册 </UButton>
           </div>
         </UForm>
       </div>
