@@ -5,11 +5,14 @@ const state = reactive({
   password: undefined,
 })
 
+const toast = useToast()
 async function registerHandle() {
   const { data } = useFetch('/api/users', { method: 'POST', body: state })
-  console.log(data.value)
+  toast.add({
+    title: data.value?.msg,
+    color: data.value?.success ? 'primary' : 'red',
+  })
 }
-const toast = useToast()
 async function onSubmit() {
   const data = await $fetch('/api/users/auth', { method: 'POST', body: state })
   if (data?.success) {
