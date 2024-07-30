@@ -42,6 +42,33 @@ function clickHandle() {
               <UIcon name="i-heroicons-x-mark" />
             </div>
           </div>
+          <div
+            class="flex -translate-y-[70px] items-center justify-between px-4"
+          >
+            <div class="relative flex size-[100px] items-center justify-center">
+              <div>
+                <img
+                  class="absolute right-[5px] top-[5px] h-[90px] rounded-full"
+                  alt="Opens profile photo"
+                  src="https://pbs.twimg.com/profile_images/1679735939873267716/CY31ZbHn_reasonably_small.jpg"
+                />
+                <div
+                  class="icon-bg mr-2 flex size-10 cursor-pointer items-center justify-center rounded-full"
+                >
+                  <UIcon name="i-heroicons-camera" />
+                </div>
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
+              ></div>
+            </div>
+          </div>
+          <div class="-mt-[60px]">
+            <UBadge color="white" variant="solid">用户名</UBadge>
+            <UInput class="mt-4" color="primary" variant="outline" />
+            <UBadge class="mt-4" color="white" variant="solid">Bio</UBadge>
+            <UTextarea class="mt-4" color="primary" variant="outline" />
+          </div>
         </div>
       </div>
     </UModal>
@@ -57,6 +84,7 @@ function clickHandle() {
       </div>
     </div>
     <img
+      class="h-[200px]"
       alt="profile photo background"
       src="https://pbs.twimg.com/profile_banners/1632658050506194945/1689315235/600x200"
     />

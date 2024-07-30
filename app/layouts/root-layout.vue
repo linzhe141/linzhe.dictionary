@@ -22,15 +22,21 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="fixed left-0 right-0 top-0 z-10 bg-green-500 leading-10">
-      <h1 class="text-center text-2xl text-white">
+    <div
+      class="fixed left-0 right-0 top-0 z-10 flex h-10 items-center bg-green-500 leading-10"
+    >
+      <h1 class="w-full text-center text-2xl text-white">
         <ULink to="/"> linzhe dictionary!!! </ULink>
       </h1>
       <ULink v-if="name" to="/profile">
-        <UAvatar class="absolute right-2 top-1" :alt="name" size="xs" />
+        <UAvatar
+          class="absolute right-2 top-1"
+          :alt="name"
+          src="https://pbs.twimg.com/profile_images/1679735939873267716/CY31ZbHn_reasonably_small.jpg"
+        />
       </ULink>
     </div>
-    <div class="mt-8"><slot /></div>
+    <div class="mt-10"><slot /></div>
     <div class="fixed bottom-2 right-2" @click="toTop">
       <UIcon
         v-if="showIcon"
