@@ -26,12 +26,9 @@ onUnmounted(() => {
       <h1 class="text-center text-2xl text-white">
         <ULink to="/"> linzhe dictionary!!! </ULink>
       </h1>
-      <UAvatar
-        v-if="name"
-        class="absolute right-2 top-1"
-        :alt="name"
-        size="xs"
-      />
+      <ULink v-if="name" to="/profile">
+        <UAvatar class="absolute right-2 top-1" :alt="name" size="xs" />
+      </ULink>
     </div>
     <div class="mt-8"><slot /></div>
     <div class="fixed bottom-2 right-2" @click="toTop">

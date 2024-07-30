@@ -11,6 +11,7 @@ export default withNuxt(eslintPluginPrettierRecommended, [
       '@stylistic/operator-linebreak': 'off',
       '@stylistic/brace-style': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@stylistic/indent-binary-ops': 'off',
     },
   },
 ])

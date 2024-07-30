@@ -53,7 +53,7 @@ function clickLight(item: any) {
         </template>
         <div class="mb-2 flex justify-between">
           <div class="flex items-center">
-            <span class="phonetic-symbols mr-2 rounded p-1">
+            <span class="normal-text mr-2 rounded p-1">
               /{{ item.symbols || '暂无音标' }}/
             </span>
             <UIcon

@@ -18,8 +18,10 @@
     "@nuxthub/core": "^0.7.0",
     "crypto-js": "^4.2.0",
     "nuxt": "^3.12.2",
+    "tippy.js": "^6.3.7",
     "vue": "^3.4.31",
-    "vue-router": "^4.4.0"
+    "vue-router": "^4.4.0",
+    "vue3-calendar-heatmap": "^2.0.5"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.3.13",
@@ -32,6 +34,7 @@
     "postcss": "^8.4.39",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
+    "sass": "^1.77.8",
     "tailwindcss": "^3.4.4",
     "vue-tsc": "^2.0.22",
     "wrangler": "^3.62.0"
