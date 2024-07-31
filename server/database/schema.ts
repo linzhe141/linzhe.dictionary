@@ -1,4 +1,4 @@
-import { type SQL, sql } from 'drizzle-orm'
+import { type SQL, sql, relations } from 'drizzle-orm'
 import {
   sqliteTable,
   text,
@@ -36,3 +36,25 @@ export const users = sqliteTable(
     nameUniqueIndex: uniqueIndex('nameUniqueIndex').on(lower(table.name)),
   }),
 )
+
+export const profiles = sqliteTable('profiles', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  nickname: text('nickname').notNull(),
+  bio: text('bio'),
+  bgImage: text('bg_image'),
+  avatarImage: text('avatar_image'),
+  userId: integer('user_id').references(() => users.id, {
+    onDelete: 'cascade',
+  }),
+})
+
+export const usersRelations = relations(users, ({ one }) => ({
+  profiles: one(profiles),
+}))
+
+export const profilesRelations = relations(profiles, ({ one }) => ({
+  users: one(users, {
+    fields: [profiles.userId],
+    references: [users.id],
+  }),
+}))
