@@ -4,16 +4,27 @@ const state = reactive({
   name: undefined,
   password: undefined,
 })
-
+const loginBtnDisabled = ref(false)
+const registerBtnDisabled = ref(false)
 const toast = useToast()
 async function registerHandle() {
-  const data = await $fetch('/api/users', { method: 'POST', body: state })
-  toast.add({
-    title: data?.msg,
-    color: data?.success ? 'primary' : 'red',
-  })
+  try {
+    registerBtnDisabled.value = true
+    const data = await $fetch('/api/users', { method: 'POST', body: state })
+    toast.add({
+      title: data?.msg,
+      color: data?.success ? 'primary' : 'red',
+    })
+  } catch (e) {
+    toast.add({
+      title: '注册失败',
+      color: 'red',
+    })
+  }
+  registerBtnDisabled.value = false
 }
 async function onSubmit() {
+  loginBtnDisabled.value = true
   const data = await $fetch('/api/users/auth', { method: 'POST', body: state })
   if (data?.success) {
     // @ts-expect-error
@@ -21,6 +32,7 @@ async function onSubmit() {
     if (callback) navigateTo(callback)
     else navigateTo('/home')
   }
+  loginBtnDisabled.value = false
   toast.add({
     title: data?.msg,
     color: data?.success ? 'primary' : 'red',
@@ -44,8 +56,10 @@ async function onSubmit() {
           </UFormGroup>
 
           <div class="flex justify-between">
-            <UButton type="submit"> 登录 </UButton>
-            <UButton @click="registerHandle"> 注册 </UButton>
+            <UButton type="submit" :disabled="loginBtnDisabled"> 登录 </UButton>
+            <UButton :disabled="registerBtnDisabled" @click="registerHandle">
+              注册
+            </UButton>
           </div>
         </UForm>
       </div>

@@ -52,12 +52,16 @@ async function uploadImage(file: File) {
 }
 
 async function submitHandle() {
+  submitBtnDisabled.value = true
   await $fetch('/api/profiles', {
     method: 'PATCH',
     body: editData,
   })
   processImg()
   isOpen.value = false
+  setTimeout(() => {
+    submitBtnDisabled.value = false
+  }, 500)
 }
 async function inputFileChangeHandle(e: Event, key: keyof DditData) {
   const data = (e.target as HTMLInputElement).files![0]!
@@ -67,6 +71,7 @@ async function inputFileChangeHandle(e: Event, key: keyof DditData) {
   const image = `/images/${imagePathname}`
   editData[key] = image
 }
+const submitBtnDisabled = ref(false)
 </script>
 
 <template>
@@ -85,7 +90,12 @@ async function inputFileChangeHandle(e: Event, key: keyof DditData) {
             </div>
             <span class="ml-5">编辑 Profile</span>
           </div>
-          <UButton color="white" variant="solid" @click="submitHandle">
+          <UButton
+            color="white"
+            variant="solid"
+            :disabled="submitBtnDisabled"
+            @click="submitHandle"
+          >
             保存
           </UButton>
         </div>

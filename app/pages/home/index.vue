@@ -6,8 +6,19 @@ definePageMeta({
 })
 const router = useRouter()
 const route = useRoute()
+
+function generateWord() {
+  const letters = 'abcdefghijklmnopqrstuvwxyz'
+  const randomIndex1 = Math.floor(Math.random() * letters.length)
+  const randomIndex2 = Math.floor(Math.random() * letters.length)
+  const randomLetter1 = letters[randomIndex1]!
+  const randomLetter2 = letters[randomIndex2]!
+  const part = randomLetter1 + randomLetter2
+  return part
+}
+
 let dictionary: Word[] = []
-const word = ref<string>((route.query.word as string) ?? 'zoo')
+const word = ref<string>(route.query.word as string)
 const submitList = ref<Word[]>([])
 const isNotFound = ref(false)
 function sortStringsByOf(data: Word[]) {
@@ -21,7 +32,9 @@ function sortStringsByOf(data: Word[]) {
   })
 }
 function submit() {
-  if (word.value === '') return
+  if (word.value.length <= 1) {
+    return toast.add({ title: '至少输入两个字符', color: 'red' })
+  }
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
   submitList.value = sortStringsByOf(
@@ -74,6 +87,7 @@ async function init() {
     ...formatCET(data2),
     ...formatCET(data3),
   ].map((i) => ({ ...i, showMeaning: true }))
+  generateExistWord()
   if (word.value) {
     submit()
   }
@@ -95,6 +109,15 @@ async function addWordToCheatSheet(word: Word) {
   })
 }
 
+function generateExistWord() {
+  if (!route.query.word) {
+    word.value = generateWord()
+    const target = dictionary.find((i) => i.word.includes(word.value))
+    if (!target) {
+      generateExistWord()
+    }
+  }
+}
 onMounted(() => {
   init()
 })
