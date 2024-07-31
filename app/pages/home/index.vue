@@ -101,7 +101,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="mx-auto max-w-[1200px]">
     <div class="p-2">
       <UCard>
         <ULink

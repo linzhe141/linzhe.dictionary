@@ -1,11 +1,13 @@
 import { desc } from 'drizzle-orm'
-import { isAuth } from '~~/server/utils/auth'
 
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
+  const userId = event.context.user.id
+
   const todos = await useDrizzle()
     .select()
     .from(tables.vocabularyCheatSheet)
+    .where(eq(tables.vocabularyCheatSheet.userId, userId))
     .orderBy(desc(tables.vocabularyCheatSheet.id))
     .all()
 

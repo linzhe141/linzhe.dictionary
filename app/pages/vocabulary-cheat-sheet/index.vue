@@ -23,7 +23,7 @@ function clickLight(item: any) {
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="mx-auto max-w-[1200px] p-2">
     <UBreadcrumb
       class="text-lg"
       divider="/"

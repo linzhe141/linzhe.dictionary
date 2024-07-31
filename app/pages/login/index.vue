@@ -7,10 +7,10 @@ const state = reactive({
 
 const toast = useToast()
 async function registerHandle() {
-  const { data } = useFetch('/api/users', { method: 'POST', body: state })
+  const data = await $fetch('/api/users', { method: 'POST', body: state })
   toast.add({
-    title: data.value?.msg,
-    color: data.value?.success ? 'primary' : 'red',
+    title: data?.msg,
+    color: data?.success ? 'primary' : 'red',
   })
 }
 async function onSubmit() {

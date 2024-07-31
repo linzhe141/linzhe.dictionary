@@ -94,7 +94,11 @@ async function inputFileChangeHandle(e: Event, key: keyof DditData) {
             class="relative flex h-[200px] items-center justify-center"
             :class="{ 'border border-[#2f3336]': !editData.bgImage }"
           >
-            <img class="absolute h-[200px]" :src="editData.bgImage" />
+            <img
+              v-if="editData.bgImage"
+              class="absolute h-[160px] w-full"
+              :src="editData.bgImage"
+            />
             <label
               class="icon-bg flex size-10 cursor-pointer items-center justify-center rounded-full"
             >
@@ -113,7 +117,8 @@ async function inputFileChangeHandle(e: Event, key: keyof DditData) {
             <div class="relative flex size-[100px] items-center justify-center">
               <div>
                 <img
-                  class="absolute right-[5px] top-[5px] h-[90px] rounded-full"
+                  v-if="editData.avatarImage"
+                  class="absolute left-[5px] top-[5px] h-[90px] w-[90px] rounded-full"
                   :src="editData.avatarImage"
                 />
                 <label
@@ -136,17 +141,17 @@ async function inputFileChangeHandle(e: Event, key: keyof DditData) {
           <div class="-mt-[60px]">
             <UBadge color="white" variant="solid">昵称</UBadge>
             <UInput
+              v-model="editData.nickname"
               class="mt-4"
               color="primary"
               variant="outline"
-              v-model="editData.nickname"
             />
             <UBadge class="mt-4" color="white" variant="solid">Bio</UBadge>
             <UTextarea
+              v-model="editData.bio"
               class="mt-4"
               color="primary"
               variant="outline"
-              v-model="editData.bio"
             />
           </div>
         </div>
@@ -163,14 +168,22 @@ async function inputFileChangeHandle(e: Event, key: keyof DditData) {
         <div class="text-xs text-gray-400">7 words</div>
       </div>
     </div>
-    <div class="flex items-center justify-center">
-      <img class="h-[200px]" :src="profileInfo.bgImage" />
+    <div class="flex h-[200px] w-[600px] items-center justify-center">
+      <img
+        v-if="profileInfo.bgImage"
+        class="h-[200px] w-full"
+        :src="profileInfo.bgImage"
+      />
     </div>
 
     <div class="flex -translate-y-[70px] items-center justify-between px-4">
       <div class="relative flex size-[140px] items-center justify-center">
         <div class="size-[130px]">
-          <img class="rounded-full" :src="profileInfo.avatarImage" />
+          <img
+            v-if="profileInfo.avatarImage"
+            class="size-[130px] rounded-full"
+            :src="profileInfo.avatarImage"
+          />
         </div>
         <div
           class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
