@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid'
+import ImgCropper from '~/components/ImgCropper.vue'
+
 const endDate = new Date('2023-12-31')
 const color = ref<any[]>([])
 const isOpen = ref(false)
+const isImgCropperOpen = ref(false)
 
 const profileInfo = reactive({
   name: '',
@@ -36,10 +40,17 @@ function clickHandle() {
 }
 
 const editData = reactive({}) as typeof profileInfo
+const editImgData = reactive({}) as typeof profileInfo
 
-type DditData = typeof editData
+type EditData = typeof editData
 const bgInputFile = ref<HTMLInputElement | null>(null)
 const avatarInputFile = ref<HTMLInputElement | null>(null)
+
+async function dataUrlToFile(dataUrl: string): Promise<File> {
+  const res: Response = await fetch(dataUrl)
+  const blob: Blob = await res.blob()
+  return new File([blob], uuidv4(), { type: 'image/png' })
+}
 
 async function uploadImage(file: File) {
   const formData = new FormData()
@@ -63,22 +74,46 @@ async function submitHandle() {
     submitBtnDisabled.value = false
   }, 500)
 }
-async function inputFileChangeHandle(e: Event, key: keyof DditData) {
+let currentkey: keyof EditData | '' = ''
+async function inputFileChangeHandle(e: Event, key: keyof EditData) {
+  currentkey = key
   const data = (e.target as HTMLInputElement).files![0]!
   const tempData = URL.createObjectURL(data)
-  editData[key] = tempData
-  const imagePathname = (await uploadImage(data!)).pathname
-  const image = `/images/${imagePathname}`
-  editData[key] = image
+  editImgData[key] = tempData
+  isImgCropperOpen.value = true
+  if (key === 'bgImage') {
+    imgCropperOptions.height = 160
+    imgCropperOptions.width = 480
+  } else if (key === 'avatarImage') {
+    imgCropperOptions.height = 480
+    imgCropperOptions.width = 480
+  }
 }
 const submitBtnDisabled = ref(false)
+
+const imgCropper = ref<InstanceType<typeof ImgCropper> | null>(null)
+async function applyHandle() {
+  const base64Data = imgCropper.value!.getCroppedImg()
+  if (currentkey) {
+    editData[currentkey] = base64Data
+    const file = await dataUrlToFile(base64Data)
+    const imagePathname = (await uploadImage(file)).pathname
+    const image = `/images/${imagePathname}`
+    editData[currentkey] = image
+  }
+  isImgCropperOpen.value = false
+}
+const imgCropperOptions = reactive({
+  height: 160,
+  width: 480,
+})
 </script>
 
 <template>
   <div
     class="mx-auto max-w-[600px] border-b border-l border-r border-[#2f3336] pb-4"
   >
-    <UModal v-model="isOpen">
+    <UModal v-model="isOpen" prevent-close>
       <div class="p-4">
         <div class="mb-3 flex justify-between">
           <div class="flex items-center">
@@ -132,7 +167,7 @@ const submitBtnDisabled = ref(false)
                   :src="editData.avatarImage"
                 />
                 <label
-                  class="icon-bg mr-2 flex size-10 cursor-pointer items-center justify-center rounded-full"
+                  class="icon-bg flex size-10 cursor-pointer items-center justify-center rounded-full"
                 >
                   <UIcon name="i-heroicons-camera" />
                   <input
@@ -165,6 +200,30 @@ const submitBtnDisabled = ref(false)
             />
           </div>
         </div>
+      </div>
+    </UModal>
+    <UModal v-model="isImgCropperOpen" prevent-close>
+      <div class="p-4">
+        <div class="mb-3 flex justify-between">
+          <div class="flex items-center">
+            <div
+              class="icon-bg flex size-8 cursor-pointer items-center justify-center rounded-full"
+              @click="isImgCropperOpen = false"
+            >
+              <UIcon name="i-heroicons-x-mark" />
+            </div>
+            <span class="ml-5">编辑图片</span>
+          </div>
+          <UButton color="white" variant="solid" @click="applyHandle">
+            应用
+          </UButton>
+        </div>
+        <ImgCropper
+          v-if="currentkey"
+          ref="imgCropper"
+          v-bind="imgCropperOptions"
+          :url="editImgData[currentkey]"
+        ></ImgCropper>
       </div>
     </UModal>
     <div class="flex h-10 items-center px-2">
