@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid'
 import ImgCropper from '~/components/ImgCropper.vue'
+
+type EditData = typeof editData
+
+const router = useRouter()
 
 const endDate = new Date('2023-12-31')
 const color = ref<any[]>([])
+
 const isOpen = ref(false)
 const isImgCropperOpen = ref(false)
 
@@ -14,6 +18,24 @@ const profileInfo = reactive({
   bgImage: '',
   avatarImage: '',
 })
+
+let currentkey: keyof EditData | '' = ''
+
+const editData = reactive({}) as typeof profileInfo
+const editImgData = reactive({}) as typeof profileInfo
+
+const bgInputFile = ref<HTMLInputElement | null>(null)
+const avatarInputFile = ref<HTMLInputElement | null>(null)
+
+const imgCropperOptions = reactive({
+  height: 160,
+  width: 480,
+})
+
+const submitBtnDisabled = ref(false)
+
+const imgCropper = ref<InstanceType<typeof ImgCropper> | null>(null)
+
 async function processImg() {
   const data = await $fetch('/api/users')
   profileInfo.name = data?.name || ''
@@ -25,41 +47,9 @@ async function processImg() {
   }
   Object.assign(editData, profileInfo)
 }
-onMounted(() => {
-  processImg()
-  const rangColor = ['#9be9a8', '#40c463', '#30a14e', '#216e39']
-  const html = document.getElementsByTagName('html')!
-  color.value = html[0]?.classList.contains('dark')
-    ? ['#161b22', ...rangColor]
-    : ['#ebedf0', ...rangColor]
-})
-const router = useRouter()
 
 function clickHandle() {
   isOpen.value = true
-}
-
-const editData = reactive({}) as typeof profileInfo
-const editImgData = reactive({}) as typeof profileInfo
-
-type EditData = typeof editData
-const bgInputFile = ref<HTMLInputElement | null>(null)
-const avatarInputFile = ref<HTMLInputElement | null>(null)
-
-async function dataUrlToFile(dataUrl: string): Promise<File> {
-  const res: Response = await fetch(dataUrl)
-  const blob: Blob = await res.blob()
-  return new File([blob], uuidv4(), { type: 'image/png' })
-}
-
-async function uploadImage(file: File) {
-  const formData = new FormData()
-  formData.append('file', file)
-  const data = await $fetch('/api/files', {
-    method: 'POST',
-    body: formData,
-  })
-  return data
 }
 
 async function submitHandle() {
@@ -74,7 +64,7 @@ async function submitHandle() {
     submitBtnDisabled.value = false
   }, 500)
 }
-let currentkey: keyof EditData | '' = ''
+
 async function inputFileChangeHandle(e: Event, key: keyof EditData) {
   currentkey = key
   const data = (e.target as HTMLInputElement).files![0]!
@@ -89,9 +79,7 @@ async function inputFileChangeHandle(e: Event, key: keyof EditData) {
     imgCropperOptions.width = 480
   }
 }
-const submitBtnDisabled = ref(false)
 
-const imgCropper = ref<InstanceType<typeof ImgCropper> | null>(null)
 async function applyHandle() {
   const base64Data = imgCropper.value!.getCroppedImg()
   if (currentkey) {
@@ -103,9 +91,14 @@ async function applyHandle() {
   }
   isImgCropperOpen.value = false
 }
-const imgCropperOptions = reactive({
-  height: 160,
-  width: 480,
+
+onMounted(() => {
+  processImg()
+  const rangColor = ['#9be9a8', '#40c463', '#30a14e', '#216e39']
+  const html = document.getElementsByTagName('html')!
+  color.value = html[0]?.classList.contains('dark')
+    ? ['#161b22', ...rangColor]
+    : ['#ebedf0', ...rangColor]
 })
 </script>
 

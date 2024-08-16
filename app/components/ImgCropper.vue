@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import 'cropperjs/dist/cropper.css'
-
 import Cropper from 'cropperjs'
 
 const props = defineProps<{
@@ -11,6 +10,15 @@ const props = defineProps<{
 
 const image = ref<HTMLImageElement | null>(null)
 let cropper: Cropper | null = null
+
+function getCroppedImg() {
+  const croppedCanvas = cropper!.getCroppedCanvas()
+  const base64Data = croppedCanvas.toDataURL('image/jpeg')
+  return base64Data
+}
+
+defineExpose({ getCroppedImg })
+
 onMounted(() => {
   cropper = new Cropper(image.value!, {
     viewMode: 0, // 保证图片适应裁剪框并保持边界
@@ -43,13 +51,6 @@ onMounted(() => {
     }
   })
 })
-
-function getCroppedImg() {
-  const croppedCanvas = cropper!.getCroppedCanvas()
-  const base64Data = croppedCanvas.toDataURL('image/jpeg')
-  return base64Data
-}
-defineExpose({ getCroppedImg })
 </script>
 
 <template>
