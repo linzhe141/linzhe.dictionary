@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'root-layout',
   middleware: 'auth',
 })
-
+const toast = useToast()
 const route = useRoute()
 const {
   data: words,
@@ -16,19 +16,90 @@ if (status.value === 'error' && error.value?.statusCode === 401) {
   navigateTo({ path: 'login', query: { callback: route.name } })
 }
 const wordsList = ref(words.value?.map((i) => ({ ...i, showMeaning: true })))
-
+watch(
+  words,
+  () =>
+    (wordsList.value = words.value?.map((i) => ({ ...i, showMeaning: true }))),
+)
 function clickLight(item: any) {
   item.showMeaning = !item.showMeaning
+}
+
+async function deleteWord(item: any) {
+  await $fetch('/api/vocabularyCheatSheet/' + item.id, { method: 'delete' })
+  _refresh()
+}
+
+function downloadJSON() {
+  const jsonData = JSON.stringify(wordsList.value!)
+  const blob = new Blob([jsonData], { type: 'application/json' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = 'vocabulary.json'
+  link.click()
+  URL.revokeObjectURL(link.href)
+}
+
+async function getJsonFromFile(file: File) {
+  const reader = new FileReader()
+  return await new Promise((resolve, reject) => {
+    reader.onload = function (e) {
+      try {
+        const jsonData = JSON.parse(e.target!.result! as string)
+        resolve(jsonData)
+      } catch (err) {
+        reject('文件内容不是有效的 JSON:')
+      }
+    }
+    reader.readAsText(file)
+  })
+}
+async function uploadJSON(inputEl: HTMLInputElement) {
+  try {
+    const data = await getJsonFromFile(inputEl.files![0]!)
+    const res = await $fetch('/api/vocabularyCheatSheet/batch', {
+      method: 'post',
+      body: JSON.stringify(data),
+    })
+    if (res.data.error.length) {
+      toast.add({
+        title: res.data.error.map((i) => i.word).join(',') + ' 导入失败',
+        color: 'red',
+      })
+    }
+  } catch (e) {
+    console.log(e)
+  }
+  _refresh()
+  inputEl.value = ''
 }
 </script>
 
 <template>
   <div class="mx-auto max-w-[1200px] p-2">
-    <UBreadcrumb
-      class="text-lg"
-      divider="/"
-      :links="[{ label: '主页', to: '/home' }, { label: '生词本' }]"
-    />
+    <div class="flex justify-between">
+      <UBreadcrumb
+        class="text-lg"
+        divider="/"
+        :links="[{ label: '主页', to: '/home' }, { label: '生词本' }]"
+      />
+      <div>
+        <UButton v-if="wordsList?.length" class="mr-3" @click="downloadJSON">
+          下载JSON文件
+        </UButton>
+        <UButton>
+          <label>
+            上传JSON文件
+            <input
+              type="file"
+              class="hidden"
+              accept=".json"
+              @change="(e) => uploadJSON(e.target as HTMLInputElement)"
+            />
+          </label>
+        </UButton>
+      </div>
+    </div>
     <div class="grid grid-cols-1 gap-2 p-2 lg:grid-cols-2">
       <UCard
         v-for="(item, index) in wordsList"
@@ -44,10 +115,18 @@ function clickLight(item: any) {
             <div
               :class="{ light: item.showMeaning }"
               class="bg-green-radial-gradient relative flex h-full cursor-pointer items-center justify-center hover:rounded-full"
-              @click="() => clickLight(item)"
             >
               <div class="glowing"></div>
-              <UIcon name="i-heroicons-light-bulb" class="mt-2 size-5" />
+              <UIcon
+                name="i-heroicons-light-bulb"
+                class="mt-2 size-5"
+                @click="() => clickLight(item)"
+              />
+              <UIcon
+                name="i-heroicons-trash"
+                class="ml-3 mt-2 size-5 text-red-500"
+                @click="() => deleteWord(item)"
+              />
             </div>
           </div>
         </template>
