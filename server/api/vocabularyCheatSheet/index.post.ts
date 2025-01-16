@@ -23,6 +23,7 @@ export default eventHandler(async (event) => {
       symbols,
       trans: trans,
       userId,
+      createdAt: new Date(),
     })
     .returning()
     .get()

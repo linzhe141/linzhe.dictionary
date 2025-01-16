@@ -26,6 +26,9 @@ importers:
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       nuxt:
         specifier: ^3.12.2
         version: 3.12.4(@parcel/watcher@2.4.1)(@types/node@20.14.12)(drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240725.0))(eslint@9.7.0)(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.4)(rollup@4.19.0)(sass@1.77.8)(terser@5.31.3)(typescript@5.5.4)(vite@5.3.5(@types/node@20.14.12)(sass@1.77.8)(terser@5.31.3))(vue-tsc@2.0.29(typescript@5.5.4))
@@ -2462,6 +2465,9 @@ packages:
 
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   db0@0.1.4:
     resolution: {integrity: sha512-Ft6eCwONYxlwLjBXSJxw0t0RYtA5gW9mq8JfBXn9TtC0nDPlqePAhpv9v4g9aONBi6JI1OXHTKKkUYGd+BOrCA==}
@@ -7684,6 +7690,8 @@ snapshots:
   data-uri-to-buffer@2.0.2: {}
 
   date-fns@3.6.0: {}
+
+  dayjs@1.11.13: {}
 
   db0@0.1.4(drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240725.0)):
     optionalDependencies:

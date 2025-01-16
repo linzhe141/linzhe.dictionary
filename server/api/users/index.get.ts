@@ -3,7 +3,7 @@ export default eventHandler(async (event) => {
   const userId = event.context.user.id
   const user = await useDrizzle().query.users.findFirst({
     where: eq(tables.users.id, userId),
-    with: { profiles: true },
+    with: { profile: true },
   })
 
   return user

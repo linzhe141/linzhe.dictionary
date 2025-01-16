@@ -7,6 +7,9 @@ import {
   type AnySQLiteColumn,
 } from 'drizzle-orm/sqlite-core'
 
+export function lower(data: AnySQLiteColumn): SQL {
+  return sql`lower(${data})`
+}
 export const todos = sqliteTable('todos', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   content: text('content').notNull(),
@@ -14,28 +17,29 @@ export const todos = sqliteTable('todos', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 })
 
-export const vocabularyCheatSheet = sqliteTable('vocabulary_cheat_sheet', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  word: text('word').notNull(),
-  symbols: text('symbols'),
-  trans: text('trans').notNull(),
-  userId: integer('user_id').references(() => users.id),
-})
-export function lower(data: AnySQLiteColumn): SQL {
-  return sql`lower(${data})`
-}
-
 export const users = sqliteTable(
   'users',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
     name: text('name').notNull(),
     password: text('password').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   },
   (table) => ({
     nameUniqueIndex: uniqueIndex('nameUniqueIndex').on(lower(table.name)),
   }),
 )
+
+export const vocabularyCheatSheet = sqliteTable('vocabulary_cheat_sheet', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  word: text('word').notNull(),
+  symbols: text('symbols'),
+  trans: text('trans').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  userId: integer('user_id').references(() => users.id, {
+    onDelete: 'cascade',
+  }),
+})
 
 export const profiles = sqliteTable('profiles', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -49,7 +53,8 @@ export const profiles = sqliteTable('profiles', {
 })
 
 export const usersRelations = relations(users, ({ one }) => ({
-  profiles: one(profiles),
+  profile: one(profiles),
+  vocabularyCheatSheet: one(vocabularyCheatSheet),
 }))
 
 export const profilesRelations = relations(profiles, ({ one }) => ({
@@ -58,3 +63,13 @@ export const profilesRelations = relations(profiles, ({ one }) => ({
     references: [users.id],
   }),
 }))
+
+export const vocabularyCheatSheetRelations = relations(
+  vocabularyCheatSheet,
+  ({ one }) => ({
+    users: one(users, {
+      fields: [vocabularyCheatSheet.userId],
+      references: [users.id],
+    }),
+  }),
+)

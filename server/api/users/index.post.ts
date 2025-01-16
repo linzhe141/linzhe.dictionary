@@ -8,6 +8,7 @@ export default eventHandler(async (event) => {
     .values({
       name,
       password,
+      createdAt: new Date(),
     })
     .returning()
     .get()

@@ -12,7 +12,12 @@ function toTop() {
 function scrollHandle() {
   showIcon.value = window.scrollY > 200
 }
+
+const img = ref('')
 onMounted(() => {
+  $fetch('/api/profiles/info').then((res) => {
+    if (res.avatarImage) img.value = res.avatarImage
+  })
   window.addEventListener('scroll', scrollHandle)
 })
 onUnmounted(() => {
@@ -29,11 +34,7 @@ onUnmounted(() => {
         <ULink to="/"> linzhe dictionary!!! </ULink>
       </h1>
       <ULink v-if="name" to="/profile">
-        <UAvatar
-          class="absolute right-2 top-1"
-          :alt="name"
-          src="https://pbs.twimg.com/profile_images/1679735939873267716/CY31ZbHn_reasonably_small.jpg"
-        />
+        <UAvatar class="absolute right-2 top-1" :alt="name" :src="img" />
       </ULink>
     </div>
     <div class="mt-10"><slot /></div>
