@@ -8,21 +8,6 @@ const props = defineProps<{
     count: number
   }[]
 }>()
-// const months = [
-//   'Jan',
-//   'Feb',
-//   'Mar',
-//   'Apr',
-//   'May',
-//   'Jun',
-//   'Jul',
-//   'Aug',
-//   'Sep',
-//   'Oct',
-//   'Nov',
-//   'Dec',
-// ]
-// const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const weeks = ref([]) as any
 
@@ -75,38 +60,51 @@ function getWeeksByStartYear(
 function getWeeksByCurrentDay(
   dateMap: Record<string, Record<string, any>> = {},
 ) {
+  let isFirstStage = true
   const currentDate = dayjs()
-  const currentDateFormat = currentDate.format('YYYY-MM-DD')
-  const currentDateDay = currentDate.day()
-
+  const currentDay = currentDate.day()
   const startDate = currentDate.subtract(365, 'day')
-  let headDate = startDate
+  const startDateFormat = startDate.format('YYYY-MM-DD')
+  let headDate = currentDate
 
   const weeks = []
   while (true) {
     const week = []
-    for (let i = 0; i < 7; i++) {
+    for (let i = isFirstStage ? currentDay : 6; i >= 0; i--) {
       const item = {
         date: headDate.format('YYYY-MM-DD'),
         day: headDate.day(),
       }
       dateMap[item.date] = item
-      week.push(item)
-      headDate = headDate.add(1, 'day')
-      if (headDate.format('YYYY-MM-DD') === currentDateFormat) break
+      week.unshift(item)
+      headDate = headDate.subtract(1, 'day')
     }
-
-    weeks.push(week)
-    if (headDate.format('YYYY-MM-DD') === currentDateFormat) break
-  }
-  const lastWeek = weeks[weeks.length - 1]
-  if (lastWeek) {
-    lastWeek.push({
-      date: currentDateFormat,
-      day: currentDateDay,
-    })
+    isFirstStage = false
+    weeks.unshift(week)
+    if (headDate.isBefore(startDateFormat)) break
   }
   return weeks
+}
+
+const monthIndexes = ref<any[]>([])
+
+function getMonthIndexes(data: any[]) {
+  const monthIndexes: any[] = []
+  data.forEach((week: any[], index) => {
+    const last = week[week.length - 1]
+    const month = dayjs(last.date).format('MMM')
+    if (last && !monthIndexes.find((i) => i.month === month)) {
+      const maybeCancelItem = monthIndexes[monthIndexes.length - 1]
+      if (maybeCancelItem && index - maybeCancelItem.index < 4) {
+        monthIndexes.pop()
+      }
+      monthIndexes.push({
+        index,
+        month,
+      })
+    }
+  })
+  return monthIndexes
 }
 
 function formatActiveDates() {
@@ -128,16 +126,30 @@ function formatActiveDates() {
     }
   })
   weeks.value = ret
+
+  monthIndexes.value = getMonthIndexes(ret)
+  console.log(monthIndexes)
 }
 watch(() => props, formatActiveDates, { immediate: true })
 formatActiveDates()
 </script>
 
 <template>
-  <div>
-    <div class="flex gap-[3px]">
+  <div class="relative">
+    <div
+      v-for="item of monthIndexes"
+      :key="item.month"
+      class="absolute text-xs"
+      :style="{ left: item.index * 14 + 32 + 'px', top: '-30px' }"
+    >
+      {{ item.month }}
+    </div>
+    <div class="absolute text-xs" style="top: 12px">Mon</div>
+    <div class="absolute text-xs" style="top: 40px">Wed</div>
+    <div class="absolute text-xs" style="top: 68px">Fri</div>
+    <div class="ml-8 mt-[40px] flex gap-[2px]">
       <!-- eslint-disable-next-line vue/require-v-for-key -->
-      <div v-for="week of weeks" class="flex flex-col gap-[3px]">
+      <div v-for="week of weeks" class="flex flex-col gap-[2px]">
         <UTooltip
           v-for="day of week"
           :key="day.date"
