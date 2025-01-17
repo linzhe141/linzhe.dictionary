@@ -3,7 +3,6 @@ import ImgCropper from '~/components/ImgCropper.vue'
 
 const router = useRouter()
 
-const endDate = new Date('2023-12-31')
 const color = ref<any[]>([])
 
 const isOpen = ref(false)
@@ -104,7 +103,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="mx-auto max-w-[600px] border-b border-l border-r border-[#2f3336] pb-4"
+    class="mx-auto max-w-[842px] border-b border-l border-r border-[#2f3336] pb-4"
   >
     <UModal v-model="isOpen" prevent-close>
       <div class="p-4">
@@ -232,10 +231,10 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="flex h-[200px] w-[600px] items-center justify-center">
+    <div class="flex h-[280px] w-[840px] items-center justify-center">
       <img
         v-if="profileInfo.bgImage"
-        class="h-[200px] w-[calc(100%-2px)]"
+        class="h-full w-[calc(100%-2px)]"
         :src="profileInfo.bgImage"
       />
     </div>
@@ -270,24 +269,7 @@ onMounted(() => {
       </div>
 
       <div class="normal-text mt-10">
-        <CalendarHeatmap
-          :dark-mode="true"
-          :values="[
-            { date: '2023-6-22', count: 1 },
-            { date: '2023-6-23', count: 6 },
-            { date: '2023-6-24', count: 2 },
-            { date: '2023-6-25', count: 10 },
-            { date: '2023-6-26', count: 6 },
-            { date: '2023-6-27', count: 16 },
-            { date: '2023-7-27', count: 16 },
-            { date: '2023-8-27', count: 16 },
-            { date: '2023-9-27', count: 16 },
-            { date: '2023-10-27', count: 0 },
-          ]"
-          :range-color="color"
-          :end-date="endDate"
-          :round="2"
-        />
+        <ActivityOverview></ActivityOverview>
       </div>
     </div>
   </div>
