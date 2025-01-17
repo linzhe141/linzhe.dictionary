@@ -3,8 +3,6 @@ import ImgCropper from '~/components/ImgCropper.vue'
 
 const router = useRouter()
 
-const color = ref<any[]>([])
-
 const isOpen = ref(false)
 const isImgCropperOpen = ref(false)
 
@@ -85,19 +83,20 @@ async function applyHandle() {
   isImgCropperOpen.value = false
 }
 
+const activeDates = [
+  { date: '2024-02-01', count: 1 },
+  { date: '2024-02-06', count: 1 },
+  { date: '2024-02-07', count: 2 },
+  { date: '2024-02-22', count: 4 },
+  { date: '2024-03-2', count: 5 },
+  { date: '2024-03-12', count: 1 },
+  { date: '2024-03-22', count: 1 },
+  { date: '2024-04-04', count: 4 },
+  { date: '2024-04-17', count: 1 },
+]
+
 onMounted(() => {
   processImg()
-  const rangColor = [
-    '#40c463',
-    '#39a14e',
-    '#229041',
-    '#216e39',
-    '#194139',
-  ].reverse()
-  const html = document.getElementsByTagName('html')!
-  color.value = html[0]?.classList.contains('dark')
-    ? ['#161b22', ...rangColor]
-    : ['#22c55e', ...rangColor]
 })
 </script>
 
@@ -269,7 +268,7 @@ onMounted(() => {
       </div>
 
       <div class="normal-text mt-10">
-        <ActivityOverview></ActivityOverview>
+        <ActivityOverview :active-dates></ActivityOverview>
       </div>
     </div>
   </div>
