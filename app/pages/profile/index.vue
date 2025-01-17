@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ImgCropper from '~/components/ImgCropper.vue'
+import ImgCropper from '~/components/img-cropper.vue'
 
 const router = useRouter()
 
