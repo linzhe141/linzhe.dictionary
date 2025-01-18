@@ -9,29 +9,36 @@ const props = defineProps<{
   }[]
 }>()
 
-const weeks = ref([]) as any
+interface DateItem {
+  date: string
+  day: number | null
+  isEmpty: boolean
+  color?: string
+}
+
+const weeks = ref<DateItem[][]>([])
 
 const activeColor = ['#0e4429', '#006d32', '#26a641', '#39d353']
 
 function getWeeksByStartYear(
   startYear: number,
-  dateMap: Record<string, Record<string, any>> = {},
+  dateMap: Record<string, DateItem> = {},
 ) {
   const startOfYear = dayjs(`${startYear}-01-01`).startOf('year')
   const startOfDay = startOfYear.day()
   let isFirstStage = true
 
-  const weeks = []
+  const weeks: DateItem[][] = []
   let currentDate = startOfYear
   while (true) {
-    const week = []
+    const week: DateItem[] = []
     for (let i = isFirstStage ? startOfDay : 0; i < 7; i++) {
-      const item = {
+      const item: DateItem = {
         date: currentDate.format('YYYY-MM-DD'),
         day: currentDate.day(),
         isEmpty: false,
       }
-      dateMap[item.date] = item
+      dateMap[item.date!] = item
       week.push(item)
       currentDate = currentDate.add(1, 'day')
       if (currentDate.year() === startYear + 1) break
@@ -57,9 +64,7 @@ function getWeeksByStartYear(
   return weeks
 }
 
-function getWeeksByCurrentDay(
-  dateMap: Record<string, Record<string, any>> = {},
-) {
+function getWeeksByCurrentDay(dateMap: Record<string, DateItem> = {}) {
   let isFirstStage = true
   const currentDate = dayjs()
   const currentDay = currentDate.day()
@@ -67,15 +72,16 @@ function getWeeksByCurrentDay(
   const startDateFormat = startDate.format('YYYY-MM-DD')
   let headDate = currentDate
 
-  const weeks = []
+  const weeks: DateItem[][] = []
   while (true) {
-    const week = []
+    const week: DateItem[] = []
     for (let i = isFirstStage ? currentDay : 6; i >= 0; i--) {
-      const item = {
+      const item: DateItem = {
         date: headDate.format('YYYY-MM-DD'),
         day: headDate.day(),
+        isEmpty: false,
       }
-      dateMap[item.date] = item
+      dateMap[item.date!] = item
       week.unshift(item)
       headDate = headDate.subtract(1, 'day')
     }
@@ -86,22 +92,29 @@ function getWeeksByCurrentDay(
   return weeks
 }
 
-const monthIndexes = ref<any[]>([])
+interface MonthIndex {
+  index: number
+  month: string
+}
 
-function getMonthIndexes(data: any[]) {
-  const monthIndexes: any[] = []
-  data.forEach((week: any[], index) => {
+const monthIndexes = ref<MonthIndex[]>([])
+
+function getMonthIndexes(data: DateItem[][]) {
+  const monthIndexes: MonthIndex[] = []
+  data.forEach((week, index) => {
     const last = week[week.length - 1]
-    const month = dayjs(last.date).format('MMM')
-    if (last && !monthIndexes.find((i) => i.month === month)) {
-      const maybeCancelItem = monthIndexes[monthIndexes.length - 1]
-      if (maybeCancelItem && index - maybeCancelItem.index < 4) {
-        monthIndexes.pop()
+    if (last) {
+      const month = dayjs(last.date!).format('MMM')
+      if (!monthIndexes.find((i) => i.month === month)) {
+        const maybeCancelItem = monthIndexes[monthIndexes.length - 1]
+        if (maybeCancelItem && index - maybeCancelItem.index < 4) {
+          monthIndexes.pop()
+        }
+        monthIndexes.push({
+          index,
+          month,
+        })
       }
-      monthIndexes.push({
-        index,
-        month,
-      })
     }
   })
   return monthIndexes
@@ -110,8 +123,8 @@ function getMonthIndexes(data: any[]) {
 function formatActiveDates() {
   const maxCount = Math.max(...props.activeDates.map((item) => item.count))
   const minCount = Math.min(...props.activeDates.map((item) => item.count))
-  const dateMap: Record<string, Record<string, any>> = {}
-  let ret = [] as any
+  const dateMap: Record<string, DateItem> = {}
+  let ret: DateItem[][] = []
   if (props.startYear) {
     ret = getWeeksByStartYear(props.startYear, dateMap)
   } else {
