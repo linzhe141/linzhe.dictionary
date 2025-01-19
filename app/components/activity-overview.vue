@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 interface DateItem {
-  date: string
+  date: string | null
   day: number | null
   isEmpty: boolean
   color?: string
@@ -161,10 +161,17 @@ formatActiveDates()
     <div class="ml-8 mt-[40px] flex gap-[2px]">
       <!-- eslint-disable-next-line vue/require-v-for-key -->
       <div v-for="week of weeks" class="flex flex-col gap-[2px]">
+        <!-- eslint-disable-next-line vue/require-v-for-key -->
+        <div
+          v-for="day of week.filter((i) => i.isEmpty)"
+          class="size-3 rounded-sm bg-[#161b22]"
+          :class="{ invisible: day.isEmpty }"
+          :style="{ backgroundColor: day.color }"
+        ></div>
         <UTooltip
-          v-for="day of week"
-          :key="day.date"
-          :text="day.date"
+          v-for="day of week.filter((i) => !i.isEmpty)"
+          :key="day.date!"
+          :text="day.date!"
           :popper="{ placement: 'top' }"
         >
           <div

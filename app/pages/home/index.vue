@@ -76,17 +76,22 @@ function formatWords(data: GithubWord[]) {
 
 const initLoading = ref(true)
 async function init() {
-  initLoading.value = true
-  const data1: CET6_WORD[] = await $fetch('/words/cet6-1.json')
-  const data2: CET6_WORD[] = await $fetch('/words/cet6-2.json')
-  const data3: CET6_WORD[] = await $fetch('/words/cet6-3.json')
-  const data4: GithubWord[] = await $fetch('/words/words.json')
-  dictionary = [
-    ...formatWords(data4),
-    ...formatCET(data1),
-    ...formatCET(data2),
-    ...formatCET(data3),
-  ].map((i) => ({ ...i, showMeaning: true }))
+  if (getCache('words')) {
+    dictionary = getCache('words')
+  } else {
+    initLoading.value = true
+    const data1: CET6_WORD[] = await $fetch('/words/cet6-1.json')
+    const data2: CET6_WORD[] = await $fetch('/words/cet6-2.json')
+    const data3: CET6_WORD[] = await $fetch('/words/cet6-3.json')
+    const data4: GithubWord[] = await $fetch('/words/words.json')
+    dictionary = [
+      ...formatWords(data4),
+      ...formatCET(data1),
+      ...formatCET(data2),
+      ...formatCET(data3),
+    ].map((i) => ({ ...i, showMeaning: true }))
+    setCache('words', dictionary)
+  }
   generateExistWord()
   if (word.value) {
     submit()
