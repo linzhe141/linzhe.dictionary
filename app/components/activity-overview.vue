@@ -9,9 +9,19 @@ const props = defineProps<{
   }[]
 }>()
 
+interface clickActiveDateParams {
+  date: string
+  count: number
+}
+
+const _emit = defineEmits<{
+  clickActiveDate: [data: clickActiveDateParams]
+}>()
+
 interface DateItem {
   date: string | null
   day: number | null
+  count: number
   isEmpty: boolean
   color?: string
 }
@@ -19,48 +29,51 @@ interface DateItem {
 const weeks = ref<DateItem[][]>([])
 
 const activeColor = ['#0e4429', '#006d32', '#26a641', '#39d353']
+const DAYS_IN_WEEK = 7
+
+function createDateItem(date: dayjs.Dayjs, isEmpty = false): DateItem {
+  return {
+    date: isEmpty ? null : date.format('YYYY-MM-DD'),
+    day: isEmpty ? null : date.day(),
+    count: 0,
+    isEmpty,
+  }
+}
 
 function getWeeksByStartYear(
   startYear: number,
   dateMap: Record<string, DateItem> = {},
 ) {
-  const startOfYear = dayjs(`${startYear}-01-01`).startOf('year')
-  const startOfDay = startOfYear.day()
   let isFirstStage = true
+  const startYearDate = dayjs(`${startYear}-01-01`).startOf('year')
+  const startYearDay = startYearDate.day()
 
   const weeks: DateItem[][] = []
-  let currentDate = startOfYear
+  let currentDate = startYearDate
   while (true) {
     const week: DateItem[] = []
-    for (let i = isFirstStage ? startOfDay : 0; i < 7; i++) {
-      const item: DateItem = {
-        date: currentDate.format('YYYY-MM-DD'),
-        day: currentDate.day(),
-        isEmpty: false,
-      }
+    for (let i = isFirstStage ? startYearDay : 0; i < DAYS_IN_WEEK; i++) {
+      const item = createDateItem(currentDate)
       dateMap[item.date!] = item
       week.push(item)
       currentDate = currentDate.add(1, 'day')
       if (currentDate.year() === startYear + 1) break
     }
 
-    isFirstStage = false
+    if (isFirstStage) isFirstStage = false
     weeks.push(week)
     if (currentDate.year() === startYear + 1) break
   }
+
   const firstWeek = weeks[0]
-  if (firstWeek) {
-    const firstWeekLen = firstWeek.length
-    if (firstWeekLen != 7) {
-      firstWeek.unshift(
-        ...Array(7 - firstWeekLen).fill({
-          date: null,
-          day: null,
-          isEmpty: true,
-        }),
-      )
-    }
+  if (firstWeek && firstWeek.length < DAYS_IN_WEEK) {
+    firstWeek.unshift(
+      ...Array(DAYS_IN_WEEK - firstWeek.length).fill(
+        createDateItem(currentDate, true),
+      ),
+    )
   }
+
   return weeks
 }
 
@@ -69,25 +82,20 @@ function getWeeksByCurrentDay(dateMap: Record<string, DateItem> = {}) {
   const currentDate = dayjs()
   const currentDay = currentDate.day()
   const startDate = currentDate.subtract(365, 'day')
-  const startDateFormat = startDate.format('YYYY-MM-DD')
   let headDate = currentDate
 
   const weeks: DateItem[][] = []
   while (true) {
     const week: DateItem[] = []
-    for (let i = isFirstStage ? currentDay : 6; i >= 0; i--) {
-      const item: DateItem = {
-        date: headDate.format('YYYY-MM-DD'),
-        day: headDate.day(),
-        isEmpty: false,
-      }
+    for (let i = isFirstStage ? currentDay : DAYS_IN_WEEK - 1; i >= 0; i--) {
+      const item = createDateItem(headDate)
       dateMap[item.date!] = item
       week.unshift(item)
       headDate = headDate.subtract(1, 'day')
     }
-    isFirstStage = false
+    if (isFirstStage) isFirstStage = false
     weeks.unshift(week)
-    if (headDate.isBefore(startDateFormat)) break
+    if (headDate.isBefore(startDate)) break
   }
   return weeks
 }
@@ -105,15 +113,12 @@ function getMonthIndexes(data: DateItem[][]) {
     const last = week[week.length - 1]
     if (last) {
       const month = dayjs(last.date!).format('MMM')
-      if (!monthIndexes.find((i) => i.month === month)) {
+      if (!monthIndexes.some((i) => i.month === month)) {
         const maybeCancelItem = monthIndexes[monthIndexes.length - 1]
         if (maybeCancelItem && index - maybeCancelItem.index < 4) {
           monthIndexes.pop()
         }
-        monthIndexes.push({
-          index,
-          month,
-        })
+        monthIndexes.push({ index, month })
       }
     }
   })
@@ -121,6 +126,8 @@ function getMonthIndexes(data: DateItem[][]) {
 }
 
 function formatActiveDates() {
+  if (props.activeDates.length === 0) return
+
   const maxCount = Math.max(...props.activeDates.map((item) => item.count))
   const minCount = Math.min(...props.activeDates.map((item) => item.count))
   const dateMap: Record<string, DateItem> = {}
@@ -130,18 +137,24 @@ function formatActiveDates() {
   } else {
     ret = getWeeksByCurrentDay(dateMap)
   }
+
   props.activeDates.forEach((i) => {
     const target = dateMap[i.date]
     const normalizedCount = (i.count - minCount) / (maxCount - minCount)
     const colorIndex = Math.floor(normalizedCount * (activeColor.length - 1))
     if (target) {
       target.color = activeColor[colorIndex]
+      target.count = i.count
     }
   })
+
   weeks.value = ret
   monthIndexes.value = getMonthIndexes(ret)
 }
-watch(() => props, formatActiveDates, { immediate: true })
+
+watch([() => props.activeDates, () => props.startYear], formatActiveDates, {
+  immediate: true,
+})
 </script>
 
 <template>
@@ -170,9 +183,20 @@ watch(() => props, formatActiveDates, { immediate: true })
         <UTooltip
           v-for="day of week.filter((i) => !i.isEmpty)"
           :key="day.date!"
-          :text="day.date!"
           :popper="{ placement: 'top' }"
+          @click="
+            () =>
+              day.count &&
+              $emit('clickActiveDate', {
+                date: day.date!,
+                count: day.count,
+              })
+          "
         >
+          <template #text>
+            <span class="italic">{{ day.date! }}</span>
+            <span class="italic"> count: {{ day.count }}</span>
+          </template>
           <div
             class="size-3 rounded-sm bg-[#161b22]"
             :class="{ invisible: day.isEmpty }"

@@ -83,7 +83,7 @@ async function applyHandle() {
   isImgCropperOpen.value = false
 }
 
-const activeDates = [
+const activeDates = ref([
   { date: '2024-02-01', count: 1 },
   { date: '2024-02-06', count: 1 },
   { date: '2024-02-07', count: 2 },
@@ -93,10 +93,31 @@ const activeDates = [
   { date: '2024-03-22', count: 1 },
   { date: '2024-04-04', count: 4 },
   { date: '2024-04-17', count: 1 },
-]
+])
+
+const startYear = ref()
+
+function clickActiveDate(data: { date: string; count: number }) {
+  console.log(data)
+}
 
 onMounted(() => {
   processImg()
+  // JUST TEST
+  setTimeout(() => {
+    startYear.value = 2024
+    activeDates.value = [
+      { date: '2024-02-11', count: 1 },
+      { date: '2024-02-16', count: 11 },
+      { date: '2024-02-27', count: 21 },
+      { date: '2024-02-22', count: 14 },
+      { date: '2024-03-12', count: 5 },
+      { date: '2024-03-2', count: 12 },
+      { date: '2024-03-22', count: 7 },
+      { date: '2024-04-04', count: 4 },
+      { date: '2024-04-27', count: 1 },
+    ]
+  }, 5000)
 })
 </script>
 
@@ -268,7 +289,11 @@ onMounted(() => {
       </div>
 
       <div class="normal-text mt-10">
-        <ActivityOverview :active-dates></ActivityOverview>
+        <ActivityOverview
+          :active-dates
+          :start-year
+          @click-active-date="clickActiveDate"
+        ></ActivityOverview>
       </div>
     </div>
   </div>
