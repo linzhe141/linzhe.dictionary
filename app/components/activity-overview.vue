@@ -142,7 +142,6 @@ function formatActiveDates() {
   monthIndexes.value = getMonthIndexes(ret)
 }
 watch(() => props, formatActiveDates, { immediate: true })
-formatActiveDates()
 </script>
 
 <template>
