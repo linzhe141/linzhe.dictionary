@@ -1,4 +1,3 @@
-/* eslint-disable @stylistic/member-delimiter-style */
 export type Word = {
   word: string
   colorWord?: string
