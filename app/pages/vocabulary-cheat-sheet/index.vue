@@ -122,7 +122,7 @@ async function uploadJSON(inputEl: HTMLInputElement) {
                 @click="() => deleteWord(item)"
               />
               <UIcon
-                name="streamline:dictionary-language-book"
+                name="i-heroicons-globe-asia-australia"
                 class="ml-3 mt-2 size-5 text-green-500"
                 @click="() => navigateTo('/home?word=' + item.word)"
               />
