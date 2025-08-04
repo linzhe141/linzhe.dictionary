@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import ImgCropper from '~/components/img-cropper.vue'
 
-const router = useRouter()
+definePageMeta({
+  middleware: 'auth',
+})
 
+const router = useRouter()
+const startYear = new Date().getFullYear()
 const isOpen = ref(false)
 const isImgCropperOpen = ref(false)
 
@@ -83,41 +87,25 @@ async function applyHandle() {
   isImgCropperOpen.value = false
 }
 
-const activeDates = ref([
-  { date: '2024-02-01', count: 1 },
-  { date: '2024-02-06', count: 1 },
-  { date: '2024-02-07', count: 2 },
-  { date: '2024-02-22', count: 4 },
-  { date: '2024-03-2', count: 5 },
-  { date: '2024-03-12', count: 1 },
-  { date: '2024-03-22', count: 1 },
-  { date: '2024-04-04', count: 4 },
-  { date: '2024-04-17', count: 1 },
-])
-
-const startYear = ref()
-
 function clickActiveDate(data: { date: string; count: number }) {
   console.log(data)
 }
-
+const { data: words } = await useFetch('/api/vocabularyCheatSheet')
+const activeDates = computed(formatGroupDate)
+function formatGroupDate() {
+  const groupMap = new Map<string, number>()
+  if (!words.value) return []
+  words.value.forEach((item) => {
+    const date = item.createdAt.split('T')[0]!
+    groupMap.set(date, (groupMap.get(date) || 0) + 1)
+  })
+  return Array.from(groupMap.entries()).map(([date, count]) => ({
+    date,
+    count,
+  }))
+}
 onMounted(() => {
   processImg()
-  // JUST TEST
-  setTimeout(() => {
-    startYear.value = 2024
-    activeDates.value = [
-      { date: '2024-02-11', count: 1 },
-      { date: '2024-02-16', count: 11 },
-      { date: '2024-02-27', count: 21 },
-      { date: '2024-02-22', count: 14 },
-      { date: '2024-03-12', count: 5 },
-      { date: '2024-03-2', count: 12 },
-      { date: '2024-03-22', count: 7 },
-      { date: '2024-04-04', count: 4 },
-      { date: '2024-04-27', count: 1 },
-    ]
-  }, 5000)
 })
 </script>
 

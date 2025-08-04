@@ -4,17 +4,10 @@ definePageMeta({
   middleware: 'auth',
 })
 const toast = useToast()
-const route = useRoute()
-const {
-  data: words,
-  refresh: _refresh,
-  status,
-  error,
-} = await useFetch('/api/vocabularyCheatSheet')
-if (status.value === 'error' && error.value?.statusCode === 401) {
-  // @ts-expect-error
-  navigateTo({ path: 'login', query: { callback: route.name } })
-}
+const { data: words, refresh: _refresh } = await useFetch(
+  '/api/vocabularyCheatSheet',
+)
+
 const wordsList = ref(words.value?.map((i) => ({ ...i, showMeaning: true })))
 watch(
   words,
@@ -105,6 +98,7 @@ async function uploadJSON(inputEl: HTMLInputElement) {
         v-for="(item, index) in wordsList"
         :key="item.word"
         :class="{
+          'normal-text': true,
           'lg:col-span-2':
             wordsList!.length % 2 !== 0 && index === wordsList!.length - 1,
         }"
@@ -127,12 +121,17 @@ async function uploadJSON(inputEl: HTMLInputElement) {
                 class="ml-3 mt-2 size-5 text-red-500"
                 @click="() => deleteWord(item)"
               />
+              <UIcon
+                name="streamline:dictionary-language-book"
+                class="ml-3 mt-2 size-5 text-green-500"
+                @click="() => navigateTo('/home?word=' + item.word)"
+              />
             </div>
           </div>
         </template>
         <div class="mb-2 flex justify-between">
           <div class="flex items-center">
-            <span class="normal-text mr-2 rounded p-1">
+            <span class="mr-2 rounded p-1">
               /{{ item.symbols || '暂无音标' }}/
             </span>
             <UIcon
@@ -143,9 +142,6 @@ async function uploadJSON(inputEl: HTMLInputElement) {
           </div>
         </div>
         <template v-if="item.showMeaning">
-          <!-- <div v-for="i of item.trans.split(';')" :key="i" class="mt-2">
-            {{ i }}
-          </div> -->
           <div class="mt-2">
             {{ item.trans }}
           </div>

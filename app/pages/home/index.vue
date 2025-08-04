@@ -7,6 +7,11 @@ definePageMeta({
 const router = useRouter()
 const route = useRoute()
 
+const user = useCookie('user')
+// @ts-expect-error
+const name = (user.value ?? {}).name
+const img = ref('')
+
 function generateWord() {
   const letters = 'abcdefghijklmnopqrstuvwxyz'
   const randomIndex1 = Math.floor(Math.random() * letters.length)
@@ -39,13 +44,15 @@ function submit() {
   router.replace({ query: { word: word.value } })
   submitList.value = sortStringsByOf(
     dictionary.filter((i) => i.word.includes(word.value)),
-  ).map((i) => ({
-    ...i,
-    colorWord: i.word.replace(
-      new RegExp(word.value),
-      `<span class="text-green-500">${word.value}</span>`,
-    ),
-  }))
+  )
+    .map((i) => ({
+      ...i,
+      colorWord: i.word.replace(
+        new RegExp(word.value),
+        `<span class="text-green-500">${word.value}</span>`,
+      ),
+    }))
+    .slice(0, 10)
 
   if (!submitList.value.length) {
     isNotFound.value = true
@@ -76,14 +83,20 @@ function formatWords(data: GithubWord[]) {
 
 const initLoading = ref(true)
 async function init() {
+  $fetch('/api/profiles/info').then((res) => {
+    if (res.avatarImage) img.value = res.avatarImage
+  })
   if (getCache('words')) {
     dictionary = getCache('words')
   } else {
     initLoading.value = true
-    const data1: CET6_WORD[] = await $fetch('/words/cet6-1.json')
-    const data2: CET6_WORD[] = await $fetch('/words/cet6-2.json')
-    const data3: CET6_WORD[] = await $fetch('/words/cet6-3.json')
-    const data4: GithubWord[] = await $fetch('/words/words.json')
+
+    const [data1, data2, data3, data4] = (await Promise.all([
+      $fetch('/words/cet6-1.json'),
+      $fetch('/words/cet6-2.json'),
+      $fetch('/words/cet6-3.json'),
+      $fetch('/words/words.json'),
+    ])) as [CET6_WORD[], CET6_WORD[], CET6_WORD[], GithubWord[]]
     dictionary = [
       ...formatWords(data4),
       ...formatCET(data1),
@@ -123,6 +136,7 @@ function generateExistWord() {
     }
   }
 }
+
 onMounted(() => {
   init()
 })
@@ -132,13 +146,18 @@ onMounted(() => {
   <div class="mx-auto max-w-[1200px]">
     <div class="p-2">
       <UCard>
-        <ULink
-          to="/vocabulary-cheat-sheet"
-          active-class="text-primary"
-          inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-        >
-          生词本
-        </ULink>
+        <div class="flex w-full items-center justify-between">
+          <ULink
+            to="/vocabulary-cheat-sheet"
+            active-class="text-primary"
+            inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+          >
+            生词本
+          </ULink>
+          <ULink v-if="name" to="/profile">
+            <UAvatar class="size-8" :alt="name" :src="img" />
+          </ULink>
+        </div>
       </UCard>
     </div>
     <div class="p-2">

@@ -1,6 +1,7 @@
 export default defineNuxtRouteMiddleware(() => {
   const user = useCookie('user')
   if (!user.value) {
-    return navigateTo('/login')
+    const uri = location.pathname.slice(1) + location.search
+    return navigateTo('/login?redirect=' + encodeURIComponent(uri))
   }
 })

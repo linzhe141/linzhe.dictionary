@@ -6,10 +6,10 @@ export default defineEventHandler(async (event) => {
   const url = new URL(urlString)
   const word = url.searchParams.get('word') ?? ''
   const dictvoiceUrl = 'https://dict.youdao.com/dictvoice?type=2&audio='
+  // @ts-ignore
   const data: ReadableStream = await $fetch(dictvoiceUrl + word, {
     responseType: 'stream',
   })
-  console.log(data)
 
   return sendStream(event, data)
 })

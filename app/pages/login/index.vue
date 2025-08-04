@@ -24,19 +24,26 @@ async function registerHandle() {
   registerBtnDisabled.value = false
 }
 async function onSubmit() {
-  loginBtnDisabled.value = true
-  const data = await $fetch('/api/users/auth', { method: 'POST', body: state })
-  if (data?.success) {
-    // @ts-expect-error
-    const callback: string = route.query.callback ?? ''
-    if (callback) navigateTo(callback)
-    else navigateTo('/home')
+  try {
+    loginBtnDisabled.value = true
+    const data = await $fetch('/api/users/auth', {
+      method: 'POST',
+      body: state,
+    })
+    if (data?.success) {
+      // @ts-expect-error
+      const redirect: string = route.query.redirect ?? ''
+      if (redirect) navigateTo(decodeURIComponent(redirect))
+      else navigateTo('/home')
+    }
+    loginBtnDisabled.value = false
+    toast.add({
+      title: data?.msg,
+      color: data?.success ? 'primary' : 'red',
+    })
+  } finally {
+    loginBtnDisabled.value = false
   }
-  loginBtnDisabled.value = false
-  toast.add({
-    title: data?.msg,
-    color: data?.success ? 'primary' : 'red',
-  })
 }
 </script>
 

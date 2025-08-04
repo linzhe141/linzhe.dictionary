@@ -141,7 +141,9 @@ function formatActiveDates() {
   props.activeDates.forEach((i) => {
     const target = dateMap[i.date]
     const normalizedCount = (i.count - minCount) / (maxCount - minCount)
-    const colorIndex = Math.floor(normalizedCount * (activeColor.length - 1))
+    const colorIndex = isNaN(normalizedCount)
+      ? activeColor.length - 1
+      : Math.floor(normalizedCount * (activeColor.length - 1))
     if (target) {
       target.color = activeColor[colorIndex]
       target.count = i.count
