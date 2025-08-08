@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import WordsListProvider from './provider/WordsListProvider'
+
 useHead({
   title: 'linzhe dictionary',
   meta: [{ name: 'description', content: '英语单词小抄' }],
@@ -6,9 +8,12 @@ useHead({
 </script>
 
 <template>
-  <NuxtLayout>
-    <!-- router-view 入口？ -->
-    <NuxtPage />
-  </NuxtLayout>
-  <UNotifications />
+  <UApp>
+    <WordsListProvider>
+      <NuxtLayout>
+        <!-- router-view 入口？ -->
+        <NuxtPage />
+      </NuxtLayout>
+    </WordsListProvider>
+  </UApp>
 </template>

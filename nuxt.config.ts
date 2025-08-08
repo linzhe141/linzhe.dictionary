@@ -1,4 +1,5 @@
 export default defineNuxtConfig({
+  compatibilityDate: '2025-04-25',
   future: { compatibilityVersion: 4 },
   app: {
     head: {
@@ -16,12 +17,7 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
+
   hub: {
     database: true,
     cache: true,

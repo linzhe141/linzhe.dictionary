@@ -1,9 +1,9 @@
 <template>
   <div
-    class="contrast-content flex h-screen items-center justify-center overflow-hidden bg-green-400 text-[#213547]"
+    class="contrast-content flex h-screen items-center justify-center overflow-hidden bg-green-400"
   >
     <div className="flex flex-col items-center justify-center">
-      <ULink to="/home">
+      <ULink to="/home" class="text-[#213547] hover:text-[#213547]">
         <div
           className="text-content relative flex flex-col items-center justify-center"
         >

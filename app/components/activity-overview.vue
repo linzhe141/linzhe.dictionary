@@ -14,7 +14,7 @@ interface clickActiveDateParams {
   count: number
 }
 
-const _emit = defineEmits<{
+defineEmits<{
   clickActiveDate: [data: clickActiveDateParams]
 }>()
 
@@ -126,7 +126,7 @@ function getMonthIndexes(data: DateItem[][]) {
 }
 
 function formatActiveDates() {
-  if (props.activeDates.length === 0) return
+  // if (props.activeDates.length === 0) return
 
   const maxCount = Math.max(...props.activeDates.map((item) => item.count))
   const minCount = Math.min(...props.activeDates.map((item) => item.count))

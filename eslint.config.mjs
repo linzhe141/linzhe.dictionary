@@ -1,4 +1,3 @@
-// @ts-check
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import withNuxt from './.nuxt/eslint.config.mjs'
 
@@ -12,7 +11,9 @@ export default withNuxt(eslintPluginPrettierRecommended, [
       '@stylistic/operator-linebreak': 'off',
       '@stylistic/brace-style': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
       '@stylistic/indent-binary-ops': 'off',
+      'vue/multi-word-component-names': 'off',
     },
   },
 ])

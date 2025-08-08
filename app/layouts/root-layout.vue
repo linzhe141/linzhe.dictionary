@@ -23,8 +23,8 @@ onUnmounted(() => {
     <div
       class="fixed left-0 right-0 top-0 z-10 flex h-10 items-center bg-green-500 leading-10"
     >
-      <h1 class="w-full text-center text-2xl text-white">
-        <ULink to="/"> linzhe dictionary!!! </ULink>
+      <h1 class="w-full text-center text-2xl">
+        <ULink to="/" class="text-white"> linzhe dictionary!!! </ULink>
       </h1>
     </div>
     <div class="mt-10"><slot /></div>

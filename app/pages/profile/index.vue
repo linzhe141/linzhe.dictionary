@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ImgCropper from '~/components/img-cropper.vue'
+import ActivityOverview from '~/components/activity-overview.vue'
 
 definePageMeta({
   middleware: 'auth',
@@ -113,119 +114,6 @@ onMounted(() => {
   <div
     class="mx-auto max-w-[842px] border-b border-l border-r border-[#2f3336] pb-4"
   >
-    <UModal v-model="isOpen" prevent-close>
-      <div class="p-4">
-        <div class="mb-3 flex justify-between">
-          <div class="flex items-center">
-            <div
-              class="icon-bg flex size-8 cursor-pointer items-center justify-center rounded-full"
-              @click="isOpen = false"
-            >
-              <UIcon name="i-heroicons-x-mark" />
-            </div>
-            <span class="ml-5">编辑 Profile</span>
-          </div>
-          <UButton
-            color="white"
-            variant="solid"
-            :disabled="submitBtnDisabled"
-            @click="submitHandle"
-          >
-            保存
-          </UButton>
-        </div>
-        <div>
-          <div
-            class="relative flex h-[200px] items-center justify-center"
-            :class="{ 'border border-[#2f3336]': !editData.bgImage }"
-          >
-            <img
-              v-if="editData.bgImage"
-              class="absolute h-[160px] w-full"
-              :src="editData.bgImage"
-            />
-            <label
-              class="icon-bg flex size-10 cursor-pointer items-center justify-center rounded-full"
-            >
-              <UIcon name="i-heroicons-camera" />
-              <input
-                ref="bgInputFile"
-                type="file"
-                class="hidden"
-                @change="(e) => inputFileChangeHandle(e, 'bgImage')"
-              />
-            </label>
-          </div>
-          <div
-            class="flex -translate-y-[70px] items-center justify-between px-4"
-          >
-            <div class="relative flex size-[100px] items-center justify-center">
-              <div>
-                <img
-                  v-if="editData.avatarImage"
-                  class="absolute left-[5px] top-[5px] h-[90px] w-[90px] rounded-full"
-                  :src="editData.avatarImage"
-                />
-                <label
-                  class="icon-bg flex size-10 cursor-pointer items-center justify-center rounded-full"
-                >
-                  <UIcon name="i-heroicons-camera" />
-                  <input
-                    ref="avatarInputFile"
-                    type="file"
-                    class="hidden"
-                    @change="(e) => inputFileChangeHandle(e, 'avatarImage')"
-                  />
-                </label>
-              </div>
-              <div
-                class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
-              ></div>
-            </div>
-          </div>
-          <div class="-mt-[60px]">
-            <UBadge color="white" variant="solid">昵称</UBadge>
-            <UInput
-              v-model="editData.nickname"
-              class="mt-4"
-              color="primary"
-              variant="outline"
-            />
-            <UBadge class="mt-4" color="white" variant="solid">Bio</UBadge>
-            <UTextarea
-              v-model="editData.bio"
-              class="mt-4"
-              color="primary"
-              variant="outline"
-            />
-          </div>
-        </div>
-      </div>
-    </UModal>
-    <UModal v-model="isImgCropperOpen" prevent-close>
-      <div class="p-4">
-        <div class="mb-3 flex justify-between">
-          <div class="flex items-center">
-            <div
-              class="icon-bg flex size-8 cursor-pointer items-center justify-center rounded-full"
-              @click="isImgCropperOpen = false"
-            >
-              <UIcon name="i-heroicons-x-mark" />
-            </div>
-            <span class="ml-5">编辑图片</span>
-          </div>
-          <UButton color="white" variant="solid" @click="applyHandle">
-            应用
-          </UButton>
-        </div>
-        <ImgCropper
-          v-if="currentkey"
-          ref="imgCropper"
-          v-bind="imgCropperOptions"
-          :url="editImgData[currentkey]"
-        ></ImgCropper>
-      </div>
-    </UModal>
     <div class="flex h-10 items-center px-2">
       <UIcon
         name="i-heroicons-arrow-long-left"
@@ -260,9 +148,136 @@ onMounted(() => {
           class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
         ></div>
       </div>
-      <UButton color="white" variant="solid" @click="clickHandle">
+      <UButton color="neutral" variant="outline" @click="clickHandle">
         编辑 profile
       </UButton>
+      <UModal v-model:open="isOpen" prevent-close>
+        <template #content>
+          <div class="p-4">
+            <div class="mb-3 flex justify-between">
+              <div class="flex items-center">
+                <div
+                  class="icon-bg flex size-8 cursor-pointer items-center justify-center rounded-full"
+                  @click="isOpen = false"
+                >
+                  <UIcon name="i-heroicons-x-mark" />
+                </div>
+                <span class="ml-5">编辑 Profile</span>
+              </div>
+              <UButton
+                color="neutral"
+                variant="outline"
+                :disabled="submitBtnDisabled"
+                @click="submitHandle"
+              >
+                保存
+              </UButton>
+            </div>
+            <div>
+              <div
+                class="relative flex h-[200px] items-center justify-center"
+                :class="{ 'border border-[#2f3336]': !editData.bgImage }"
+              >
+                <img
+                  v-if="editData.bgImage"
+                  class="absolute h-[160px] w-full"
+                  :src="editData.bgImage"
+                />
+                <label
+                  class="icon-bg flex size-10 cursor-pointer items-center justify-center rounded-full"
+                >
+                  <UIcon name="i-heroicons-camera" />
+                  <input
+                    ref="bgInputFile"
+                    type="file"
+                    class="hidden"
+                    @change="(e: any) => inputFileChangeHandle(e, 'bgImage')"
+                  />
+                </label>
+              </div>
+              <div
+                class="flex -translate-y-[70px] items-center justify-between px-4"
+              >
+                <div
+                  class="relative flex size-[100px] items-center justify-center"
+                >
+                  <div>
+                    <img
+                      v-if="editData.avatarImage"
+                      class="absolute left-[5px] top-[5px] h-[90px] w-[90px] rounded-full"
+                      :src="editData.avatarImage"
+                    />
+                    <label
+                      class="icon-bg flex size-10 cursor-pointer items-center justify-center rounded-full"
+                    >
+                      <UIcon name="i-heroicons-camera" />
+                      <input
+                        ref="avatarInputFile"
+                        type="file"
+                        class="hidden"
+                        @change="
+                          (e: any) => inputFileChangeHandle(e, 'avatarImage')
+                        "
+                      />
+                    </label>
+                  </div>
+                  <div
+                    class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
+                  ></div>
+                </div>
+              </div>
+              <div class="-mt-[60px] flex flex-col">
+                <div>
+                  <UBadge color="neutral" variant="outline">昵称</UBadge>
+                </div>
+                <UInput
+                  v-model="editData.nickname"
+                  class="mt-4"
+                  color="primary"
+                  variant="outline"
+                />
+                <div>
+                  <UBadge class="mt-4" color="neutral" variant="outline">
+                    Bio
+                  </UBadge>
+                </div>
+                <UTextarea
+                  v-model="editData.bio"
+                  class="mt-4"
+                  color="primary"
+                  variant="outline"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+      </UModal>
+      <UModal v-model:open="isImgCropperOpen" prevent-close>
+        <template #content>
+          <div class="p-4">
+            <div class="mb-3 flex justify-between">
+              <div class="flex items-center">
+                <div
+                  class="icon-bg flex size-8 cursor-pointer items-center justify-center rounded-full"
+                  @click="isImgCropperOpen = false"
+                >
+                  <UIcon name="i-heroicons-x-mark" />
+                </div>
+                <span class="ml-5">编辑图片</span>
+              </div>
+              <UButton color="neutral" variant="outline" @click="applyHandle">
+                应用
+              </UButton>
+            </div>
+            <ImgCropper
+              v-if="currentkey"
+              ref="imgCropper"
+              v-bind="imgCropperOptions"
+              :url="editImgData[currentkey]"
+            ></ImgCropper>
+          </div>
+        </template>
+      </UModal>
     </div>
 
     <div class="-mt-[60px] px-4">

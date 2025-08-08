@@ -13,12 +13,12 @@ async function registerHandle() {
     const data = await $fetch('/api/users', { method: 'POST', body: state })
     toast.add({
       title: data?.msg,
-      color: data?.success ? 'primary' : 'red',
+      color: data?.success ? 'primary' : 'error',
     })
   } catch (e) {
     toast.add({
       title: '注册失败',
-      color: 'red',
+      color: 'error',
     })
   }
   registerBtnDisabled.value = false
@@ -39,7 +39,7 @@ async function onSubmit() {
     loginBtnDisabled.value = false
     toast.add({
       title: data?.msg,
-      color: data?.success ? 'primary' : 'red',
+      color: data?.success ? 'primary' : 'error',
     })
   } finally {
     loginBtnDisabled.value = false
@@ -54,13 +54,17 @@ async function onSubmit() {
     <UCard>
       <div class="flex w-[300px] flex-col items-center">
         <UForm :state="state" class="w-full space-y-4" @submit="onSubmit">
-          <UFormGroup label="用户名" name="name">
-            <UInput v-model="state.name" />
-          </UFormGroup>
+          <UFormField label="用户名" name="name">
+            <UInput v-model="state.name" class="w-[300px]" />
+          </UFormField>
 
-          <UFormGroup label="密码" name="password">
-            <UInput v-model="state.password" type="password" />
-          </UFormGroup>
+          <UFormField label="密码" name="password">
+            <UInput
+              v-model="state.password"
+              type="password"
+              class="w-[300px]"
+            />
+          </UFormField>
 
           <div class="flex justify-between">
             <UButton type="submit" :disabled="loginBtnDisabled"> 登录 </UButton>

@@ -1,11 +1,27 @@
 import { v4 as uuidv4 } from 'uuid'
 
+const audioCache = new Map<string, string>()
+
 export async function playAudio(word: string) {
-  const { data } = await useFetch('/api/dictvoice', {
-    query: { word },
-    responseType: 'blob',
-  })
-  const blobUrl = URL.createObjectURL(data.value as Blob)
+  let blobUrl = audioCache.get(word)
+
+  if (!blobUrl) {
+    const { data } = await useFetch('/api/dictvoice', {
+      query: { word },
+      responseType: 'blob',
+    })
+    blobUrl = URL.createObjectURL(data.value as Blob)
+    audioCache.set(word, blobUrl)
+
+    setTimeout(
+      () => {
+        URL.revokeObjectURL(blobUrl!)
+        audioCache.delete(word)
+      },
+      5 * 60 * 1000,
+    )
+  }
+
   const audio = new Audio(blobUrl)
   audio.play()
 }

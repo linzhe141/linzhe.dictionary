@@ -23,6 +23,7 @@ function generateWord() {
 }
 
 let dictionary: Word[] = []
+const dictionaryRef = inject('dictionaryRef') as Ref<Word[]>
 const word = ref<string>(route.query.word as string)
 const submitList = ref<Word[]>([])
 const isNotFound = ref(false)
@@ -38,7 +39,7 @@ function sortStringsByOf(data: Word[]) {
 }
 function submit() {
   if (word.value.length <= 1) {
-    return toast.add({ title: '至少输入两个字符', color: 'red' })
+    return toast.add({ title: '至少输入两个字符', color: 'error' })
   }
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
@@ -59,57 +60,11 @@ function submit() {
   }
 }
 
-function formatCET(data: CET6_WORD[]): Word[] {
-  return data.map((i) => ({
-    word: i.headWord,
-    symbols: i.content.word.content.ukphone,
-    trans: i.content.word.content.trans.map(
-      (item) => `${item.pos}. ${item.tranCn}`,
-    ),
-    examples: i.content.word.content.sentence?.sentences?.map((item) => ({
-      sentence: item.sContent,
-      trans: item.sCn,
-    })),
-  }))
-}
-function formatWords(data: GithubWord[]) {
-  return data.map((i) => ({
-    word: i.word,
-    symbols: i.symbols,
-    trans: [`${i.part} ${i.mean}`],
-    examples: [{ sentence: i.ex, trans: i.tran }],
-  }))
-}
-
-const initLoading = ref(true)
+const initLoading = computed(() => dictionaryRef.value.length === 0)
 async function init() {
   $fetch('/api/profiles/info').then((res) => {
     if (res.avatarImage) img.value = res.avatarImage
   })
-  if (getCache('words')) {
-    dictionary = getCache('words')
-  } else {
-    initLoading.value = true
-
-    const [data1, data2, data3, data4] = (await Promise.all([
-      $fetch('/words/cet6-1.json'),
-      $fetch('/words/cet6-2.json'),
-      $fetch('/words/cet6-3.json'),
-      $fetch('/words/words.json'),
-    ])) as [CET6_WORD[], CET6_WORD[], CET6_WORD[], GithubWord[]]
-    dictionary = [
-      ...formatWords(data4),
-      ...formatCET(data1),
-      ...formatCET(data2),
-      ...formatCET(data3),
-    ].map((i) => ({ ...i, showMeaning: true }))
-    setCache('words', dictionary)
-  }
-  generateExistWord()
-  if (word.value) {
-    submit()
-  }
-  initLoading.value = false
 }
 const toast = useToast()
 async function addWordToCheatSheet(word: Word) {
@@ -123,7 +78,7 @@ async function addWordToCheatSheet(word: Word) {
   }
   toast.add({
     title: data.value?.msg,
-    color: data.value?.success ? 'primary' : 'red',
+    color: data.value?.success ? 'primary' : 'error',
   })
 }
 
@@ -140,6 +95,15 @@ function generateExistWord() {
 onMounted(() => {
   init()
 })
+
+watchEffect(() => {
+  if (dictionaryRef.value.length === 0) return
+  dictionary = dictionaryRef.value
+  generateExistWord()
+  if (word.value) {
+    submit()
+  }
+})
 </script>
 
 <template>
@@ -147,13 +111,22 @@ onMounted(() => {
     <div class="p-2">
       <UCard>
         <div class="flex w-full items-center justify-between">
-          <ULink
-            to="/vocabulary-cheat-sheet"
-            active-class="text-primary"
-            inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-          >
-            生词本
-          </ULink>
+          <div class="flex items-center gap-4">
+            <ULink
+              to="/vocabulary-cheat-sheet"
+              active-class="text-primary"
+              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            >
+              生词本
+            </ULink>
+            <ULink
+              to="/review"
+              active-class="text-primary"
+              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            >
+              复习
+            </ULink>
+          </div>
           <ULink v-if="name" to="/profile">
             <UAvatar class="size-8" :alt="name" :src="img" />
           </ULink>
@@ -209,8 +182,8 @@ onMounted(() => {
           <UButton
             icon="i-heroicons-plus-circle"
             size="sm"
-            color="gray"
-            variant="solid"
+            color="neutral"
+            variant="outline"
             @click="() => addWordToCheatSheet(item)"
           >
             添加至生词本

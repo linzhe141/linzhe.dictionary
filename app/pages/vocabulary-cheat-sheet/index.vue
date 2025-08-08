@@ -57,7 +57,7 @@ async function uploadJSON(inputEl: HTMLInputElement) {
     if (res.data.error.length) {
       toast.add({
         title: res.data.error.map((i) => i.word).join(',') + ' 导入失败',
-        color: 'red',
+        color: 'error',
       })
     }
   } catch (e) {
