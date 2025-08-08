@@ -96,14 +96,17 @@ onMounted(() => {
   init()
 })
 
-watchEffect(() => {
-  if (dictionaryRef.value.length === 0) return
-  dictionary = dictionaryRef.value
-  generateExistWord()
-  if (word.value) {
-    submit()
-  }
-})
+watch(
+  () => dictionaryRef.value,
+  () => {
+    if (dictionaryRef.value.length === 0) return
+    dictionary = dictionaryRef.value
+    generateExistWord()
+    if (word.value) {
+      submit()
+    }
+  },
+)
 </script>
 
 <template>
