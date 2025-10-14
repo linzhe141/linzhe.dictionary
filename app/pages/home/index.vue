@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CET6_WORD, GithubWord, Word } from '~~/types'
+import type { Word } from '~~/types'
 
 definePageMeta({
   layout: 'root-layout',
