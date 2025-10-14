@@ -39,7 +39,8 @@ function sortStringsByOf(data: Word[]) {
 }
 function submit() {
   if (word.value.length <= 1) {
-    return toast.add({ title: '至少输入两个字符', color: 'error' })
+    toast.add({ title: '至少输入两个字符', color: 'error' })
+    return
   }
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
@@ -74,7 +75,8 @@ async function addWordToCheatSheet(word: Word) {
   })
   if (status.value === 'error' && error.value?.statusCode === 401) {
     const uri = location.pathname.slice(1) + location.search
-    return navigateTo('/login?redirect=' + encodeURIComponent(uri))
+    navigateTo('/login?redirect=' + encodeURIComponent(uri))
+    return
   }
   toast.add({
     title: data.value?.msg,
