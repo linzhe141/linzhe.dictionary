@@ -106,6 +106,9 @@ watch(
       submit()
     }
   },
+  {
+    immediate: true,
+  },
 )
 </script>
 
