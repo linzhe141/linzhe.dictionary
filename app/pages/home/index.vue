@@ -73,8 +73,8 @@ async function addWordToCheatSheet(word: Word) {
     body: { ...word, trans: word.trans.join(';') },
   })
   if (status.value === 'error' && error.value?.statusCode === 401) {
-    // @ts-expect-error
-    return navigateTo({ path: 'login', query: { callback: route.name } })
+    const uri = location.pathname.slice(1) + location.search
+    return navigateTo('/login?redirect=' + encodeURIComponent(uri))
   }
   toast.add({
     title: data.value?.msg,
