@@ -1,4 +1,4 @@
-import { type User } from './drizzle'
+import type { User } from './drizzle'
 
 export async function isAuth(user: User | undefined) {
   if (!user) throw createError({ statusCode: 401 })

@@ -1,4 +1,4 @@
-import { type VocabularyCheatSheet } from '~~/server/utils/drizzle'
+import type { VocabularyCheatSheet } from '~~/server/utils/drizzle'
 
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
