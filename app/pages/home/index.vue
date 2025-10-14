@@ -22,7 +22,7 @@ function generateWord() {
   return part
 }
 
-let dictionary: Word[] = []
+let dictionaryRaw: Word[] = []
 const dictionaryRef = inject('dictionaryRef') as Ref<Word[]>
 const word = ref<string>(route.query.word as string)
 const submitList = ref<Word[]>([])
@@ -45,7 +45,7 @@ function submit() {
   isNotFound.value = false
   router.replace({ query: { word: word.value } })
   submitList.value = sortStringsByOf(
-    dictionary.filter((i) => i.word.includes(word.value)),
+    dictionaryRaw.filter((i) => i.word.includes(word.value)),
   )
     .map((i) => ({
       ...i,
@@ -87,7 +87,7 @@ async function addWordToCheatSheet(word: Word) {
 function generateExistWord() {
   if (!route.query.word) {
     word.value = generateWord()
-    const target = dictionary.find((i) => i.word.includes(word.value))
+    const target = dictionaryRaw.find((i) => i.word.includes(word.value))
     if (!target) {
       generateExistWord()
     }
@@ -102,7 +102,7 @@ watch(
   () => dictionaryRef.value,
   () => {
     if (dictionaryRef.value.length === 0) return
-    dictionary = dictionaryRef.value
+    dictionaryRaw = dictionaryRef.value
     generateExistWord()
     if (word.value) {
       submit()
