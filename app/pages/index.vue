@@ -1,3 +1,21 @@
+<script setup lang="ts">
+const router = useRouter()
+const handleSpace = (e: KeyboardEvent) => {
+  if (e.code === 'Space' || e.key === ' ') {
+    e.preventDefault()
+    router.push('/home')
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleSpace)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleSpace)
+})
+</script>
+
 <template>
   <div
     class="contrast-content flex h-screen items-center justify-center overflow-hidden bg-green-400"
