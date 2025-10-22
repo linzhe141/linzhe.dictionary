@@ -18,7 +18,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="contrast-content flex h-screen items-center justify-center overflow-hidden bg-green-400"
+    class="contrast-content flex h-screen flex-col items-center justify-center overflow-hidden bg-green-400"
   >
     <div className="flex flex-col items-center justify-center">
       <ULink to="/home" class="text-[#213547] hover:text-[#213547]">
@@ -46,5 +46,34 @@ onBeforeUnmount(() => {
         <div class="gradient mt-2 h-2 w-[400px]"></div>
       </ULink>
     </div>
+    <ULink to="/home">
+      <div class="mt-12 flex items-center justify-center">
+        <div
+          class="spacebar relative flex h-10 w-32 items-center justify-center rounded-xl border-2 border-[#213547] text-[#213547]"
+        >
+          <div
+            class="absolute inset-0 animate-pulse rounded-xl bg-[#213547]/5"
+          ></div>
+          <span class="mb-6 text-5xl tracking-wider opacity-60">⎵</span>
+        </div>
+      </div>
+    </ULink>
   </div>
 </template>
+
+<style scoped>
+@keyframes press {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 4px 0 #213547;
+  }
+  50% {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #213547;
+  }
+}
+.spacebar {
+  animation: press 1.5s infinite ease-in-out;
+}
+</style>
