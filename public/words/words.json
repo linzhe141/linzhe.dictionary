@@ -18999,6 +18999,15 @@
     "tran": "他升任总理。"
   },
   {
+    "id": 2111001,
+    "word": "elevator",
+    "symbols": "ˈɛlɪveɪtə",
+    "part": "n.",
+    "mean": "电梯",
+    "ex": "I’m staying on the third floor. Is there an elevator or stairs only?",
+    "tran": "我住在三楼，没有电梯是不是要爬楼？"
+  },
+  {
     "id": 2112,
     "word": "elevation",
     "symbols": "ˌelɪˈveɪʃn",
