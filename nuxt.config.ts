@@ -26,13 +26,6 @@ export default defineNuxtConfig({
     database: true,
     cache: true,
     blob: true,
-    bindings: {
-      compatibilityFlags: [
-        'nodejs_compat',
-        'enable_nodejs_http_modules',
-        'enable_nodejs_http_server_modules',
-      ],
-    },
   },
   eslint: {
     config: {
