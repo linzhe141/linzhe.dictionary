@@ -52,6 +52,19 @@ export const profiles = sqliteTable('profiles', {
   }),
 })
 
+export const phrases = sqliteTable('phrases', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  content: text('content').notNull(),
+  image: text('image'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }), // 更新时间
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id, {
+      onDelete: 'cascade',
+    }),
+})
+
 export const usersRelations = relations(users, ({ one }) => ({
   profile: one(profiles),
   vocabularyCheatSheet: one(vocabularyCheatSheet),
@@ -73,3 +86,10 @@ export const vocabularyCheatSheetRelations = relations(
     }),
   }),
 )
+
+export const phrasesRelations = relations(phrases, ({ one }) => ({
+  user: one(users, {
+    fields: [phrases.userId],
+    references: [users.id],
+  }),
+}))

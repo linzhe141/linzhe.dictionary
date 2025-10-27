@@ -134,6 +134,13 @@ watch(
             >
               复习
             </ULink>
+            <ULink
+              to="/phrases"
+              active-class="text-primary"
+              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            >
+              短语 / 口语搭配
+            </ULink>
           </div>
           <ULink v-if="name" to="/profile">
             <UAvatar class="size-8" :alt="name" :src="img" />
