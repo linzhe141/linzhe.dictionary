@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   future: { compatibilityVersion: 5 },
   compatibilityDate: '2025-04-25',
   nitro: {
+    preset: 'node',
     rollupConfig: {
       external: (id) => {
         return (
