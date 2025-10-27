@@ -27,7 +27,6 @@ export default defineNuxtConfig({
     cache: true,
     blob: true,
     bindings: {
-      compatibilityDate: '2025-08-15',
       compatibilityFlags: [
         'nodejs_compat',
         'enable_nodejs_http_modules',
