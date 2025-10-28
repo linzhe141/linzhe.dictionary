@@ -280,7 +280,7 @@ const savePhrase = async () => {
           </label>
           <UTextarea
             v-model="form.content"
-            class="monospace-textarea normal-text w-full"
+            class="w-full font-mono"
             placeholder="在此输入短语内容..."
             :rows="8"
             size="lg"
