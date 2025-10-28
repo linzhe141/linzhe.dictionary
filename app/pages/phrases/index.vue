@@ -1,38 +1,16 @@
 <script setup lang="ts">
+import ImagePreview from './components/ImagePreview.vue'
+
 definePageMeta({
   middleware: 'auth',
 })
 
 const router = useRouter()
 
-interface Phrase {
-  id: string
-  image?: string
-  source?: string
-  content: string
-  createdAt: Date
-}
-
-// 短语列表
-const phrases = ref<Phrase[]>([
-  {
-    id: '1',
-    image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800',
-    source: 'F1 赛事',
-    content: `I hereby announce my retirement form formula one by the end of the 2022 season
-^ 特地，在此`,
-    createdAt: new Date('2024-01-15'),
-  },
-  {
-    id: '2',
-    content: `But as much as there is life on track, there is my life off track too
-^^^^^^^^^^^但是不仅`,
-    createdAt: new Date('2024-01-14'),
-  },
-])
-
+const { data: phrases, refresh } = await useFetch('/api/phrases')
 // 格式化日期
-const formatDate = (date: Date) => {
+const formatDate = (time: string) => {
+  const date = new Date(time)
   const now = new Date()
   const diff = now.getTime() - date.getTime()
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
@@ -49,14 +27,15 @@ const goToCreate = () => {
 }
 
 // 编辑短语
-const editPhrase = (id: string) => {
-  router.push(`/phrases/${id}/edit`)
+const editPhrase = (id: number) => {
+  router.push(`/phrases/edit/${id}`)
 }
 
+const open = ref(false)
 // 删除短语
-const deletePhrase = (id: string) => {
+const deletePhrase = (id: number) => {
   // 这里添加删除逻辑
-  phrases.value = phrases.value.filter((p) => p.id !== id)
+  open.value = false
 }
 </script>
 
@@ -74,7 +53,7 @@ const deletePhrase = (id: string) => {
           class="size-6 cursor-pointer hover:text-gray-300"
           @click="() => router.push('/home')"
         />
-        <h1 class="text-lg font-semibold">我的短语</h1>
+        <h1 class="text-lg font-semibold">短语 / 口语搭配</h1>
       </div>
       <UButton
         color="primary"
@@ -87,7 +66,7 @@ const deletePhrase = (id: string) => {
     </div>
 
     <!-- 短语列表 -->
-    <div class="p-4">
+    <div v-if="phrases" class="p-4">
       <div
         v-if="phrases.length === 0"
         class="flex flex-col items-center justify-center py-20"
@@ -108,15 +87,7 @@ const deletePhrase = (id: string) => {
         >
           <!-- 图片 -->
           <div v-if="phrase.image" class="mb-4">
-            <img
-              :src="phrase.image"
-              alt="短语配图"
-              class="w-full rounded-lg object-cover"
-              style="max-height: 200px"
-            />
-            <p v-if="phrase.source" class="mt-2 text-sm text-gray-400">
-              出处: {{ phrase.source }}
-            </p>
+            <ImagePreview :image="phrase.image" />
           </div>
 
           <!-- 短语内容 -->
@@ -138,14 +109,33 @@ const deletePhrase = (id: string) => {
               >
                 编辑
               </UButton>
-              <UButton
-                variant="ghost"
-                size="xs"
-                icon="i-heroicons-trash"
-                @click="deletePhrase(phrase.id)"
-              >
-                删除
-              </UButton>
+              <UModal v-model:open="open" prevent-close>
+                <UButton
+                  variant="ghost"
+                  size="xs"
+                  icon="i-heroicons-trash"
+                  @click="open = true"
+                >
+                  删除
+                </UButton>
+                <template #content>
+                  <div class="p-2">是否删除该短语？</div>
+                  <div class="mt-4 flex justify-end gap-2 p-2">
+                    <UButton variant="outline" @click="open = false">
+                      取消
+                    </UButton>
+                    <UButton
+                      @click="
+                        () => {
+                          deletePhrase(phrase.id)
+                        }
+                      "
+                    >
+                      删除
+                    </UButton>
+                  </div>
+                </template>
+              </UModal>
             </div>
           </div>
         </div>

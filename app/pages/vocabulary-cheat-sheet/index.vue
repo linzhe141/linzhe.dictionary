@@ -118,12 +118,12 @@ async function uploadJSON(inputEl: HTMLInputElement) {
               />
               <UIcon
                 name="i-heroicons-trash"
-                class="ml-3 mt-2 size-5 text-red-500"
+                class="mt-2 ml-3 size-5 text-red-500"
                 @click="() => deleteWord(item)"
               />
               <UIcon
                 name="i-heroicons-globe-asia-australia"
-                class="ml-3 mt-2 size-5 text-green-500"
+                class="mt-2 ml-3 size-5 text-green-500"
                 @click="() => navigateTo('/home?word=' + item.word)"
               />
             </div>

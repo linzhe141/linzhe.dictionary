@@ -112,7 +112,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="mx-auto max-w-[842px] border-b border-l border-r border-[#2f3336] pb-4"
+    class="mx-auto max-w-[842px] border-r border-b border-l border-[#2f3336] pb-4"
   >
     <div class="flex h-10 items-center px-2">
       <UIcon
@@ -145,7 +145,7 @@ onMounted(() => {
           />
         </div>
         <div
-          class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
+          class="absolute top-0 right-0 bottom-0 left-0 -z-10 rounded-full bg-black"
         ></div>
       </div>
       <UButton color="neutral" variant="outline" @click="clickHandle">
@@ -180,7 +180,7 @@ onMounted(() => {
               >
                 <img
                   v-if="editData.bgImage"
-                  class="absolute h-[160px] w-full"
+                  class="absolute h-40 w-full"
                   :src="editData.bgImage"
                 />
                 <label
@@ -204,7 +204,7 @@ onMounted(() => {
                   <div>
                     <img
                       v-if="editData.avatarImage"
-                      class="absolute left-[5px] top-[5px] h-[90px] w-[90px] rounded-full"
+                      class="absolute top-[5px] left-[5px] h-[90px] w-[90px] rounded-full"
                       :src="editData.avatarImage"
                     />
                     <label
@@ -222,7 +222,7 @@ onMounted(() => {
                     </label>
                   </div>
                   <div
-                    class="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-full bg-black"
+                    class="absolute top-0 right-0 bottom-0 left-0 -z-10 rounded-full bg-black"
                   ></div>
                 </div>
               </div>

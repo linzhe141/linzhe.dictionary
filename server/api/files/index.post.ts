@@ -12,7 +12,7 @@ export default eventHandler(async (event) => {
   })
 
   return hubBlob().put(file.name, file, {
-    addRandomSuffix: false,
+    addRandomSuffix: true,
     prefix: '',
   })
 })
