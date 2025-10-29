@@ -112,7 +112,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="mx-auto max-w-[842px] border-r border-b border-l border-[#2f3336] pb-4"
+    class="mx-auto max-w-[842px] overflow-x-hidden border-r border-b border-l border-[#2f3336] pb-4"
   >
     <div class="flex h-10 items-center px-2">
       <RouterBack></RouterBack>
@@ -287,7 +287,7 @@ onMounted(() => {
         <span class="text-xs">Joined {{ profileInfo.createTime }}</span>
       </div>
 
-      <div class="normal-text mt-10">
+      <div class="normal-text mt-10 overflow-auto">
         <ActivityOverview
           :active-dates
           :start-year
