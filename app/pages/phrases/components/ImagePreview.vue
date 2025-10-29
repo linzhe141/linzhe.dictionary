@@ -19,13 +19,13 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
   <div class="group relative w-full">
     <!-- 小图区域 -->
     <div
-      class="relative cursor-pointer overflow-hidden rounded-lg"
+      class="relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg"
       @click="showPreview = true"
     >
       <img
         :src="image"
         alt="短语配图"
-        class="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        class="object-cover transition-transform duration-300 group-hover:scale-105"
         style="max-height: 600px"
       />
 

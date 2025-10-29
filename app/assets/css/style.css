@@ -147,3 +147,7 @@ body {
   backdrop-filter: blur(0px);
   background-color: rgba(15, 20, 25, 0.75);
 }
+
+.prose pre {
+  font-size: 16px !important;
+}

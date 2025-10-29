@@ -8,3 +8,12 @@
 ## TODO
 
 - [x] 生词本
+
+
+ahead of 
+
+| 短语            | 核心含义                   | 常用场景         | 举例                              |
+| --------------- | -------------------------- | ---------------- | --------------------------------- |
+| **ahead of**    | 领先、提前、在前方（抽象） | 比赛、时间、计划 | He’s ahead of me in the race.     |
+| **in front of** | 在……前面（具体空间）       | 人、物、建筑     | She stood in front of the mirror. |
+| **above**       | 在……上方                   | 空间高度、数值   | The sun is above the horizon.     |
