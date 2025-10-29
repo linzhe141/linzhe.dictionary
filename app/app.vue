@@ -2,6 +2,9 @@
 import WordsListProvider from './provider/WordsListProvider'
 
 useHead({
+  htmlAttrs: {
+    class: 'dark',
+  },
   title: 'dictionary',
   meta: [
     { name: 'description', content: 'linzhe的英语单词小抄' },
