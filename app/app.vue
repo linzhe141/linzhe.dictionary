@@ -2,7 +2,7 @@
 import WordsListProvider from './provider/WordsListProvider'
 
 useHead({
-  title: 'linzhe dictionary',
+  title: 'dictionary',
   meta: [{ name: 'description', content: '英语单词小抄' }],
 })
 </script>

@@ -1,0 +1,7 @@
+workflows
+public/words
+migrations
+dist
+dist-electron
+pnpm-lock.yaml
+CHANGELOG*.md

@@ -1,4 +1,4 @@
-# linzhe-dictionary
+# dictionary
 
 > [!IMPORTANT]
 > 该库旨在用于记录英语单词，并且是一项正在进行的工作。 预计未来版本中会有重大变化。

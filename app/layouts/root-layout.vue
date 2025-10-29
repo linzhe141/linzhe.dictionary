@@ -21,14 +21,14 @@ onUnmounted(() => {
 <template>
   <div>
     <div
-      class="fixed left-0 right-0 top-0 z-10 flex h-10 items-center bg-green-500 leading-10"
+      class="fixed top-0 right-0 left-0 z-10 flex h-10 items-center bg-green-500 leading-10"
     >
       <h1 class="w-full text-center text-2xl">
-        <ULink to="/" class="text-white"> linzhe dictionary!!! </ULink>
+        <ULink to="/" class="text-white"> dictionary!!! </ULink>
       </h1>
     </div>
     <div class="mt-10"><slot /></div>
-    <div class="fixed bottom-2 right-2" @click="toTop">
+    <div class="fixed right-2 bottom-2" @click="toTop">
       <UIcon
         v-if="showIcon"
         name="i-heroicons-arrow-up-circle-16-solid"

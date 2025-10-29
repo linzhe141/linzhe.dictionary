@@ -50,7 +50,7 @@ async function onSubmit() {
 <template>
   <div class="flex h-screen flex-col items-center justify-center space-y-4">
     <img class="w-[60px] rounded-lg" src="/icon.png" />
-    <div class="text-2xl">登录到 linzhe dictionary</div>
+    <div class="text-2xl">登录到 dictionary</div>
     <UCard>
       <div class="flex w-[300px] flex-col items-center">
         <UForm :state="state" class="w-full space-y-4" @submit="onSubmit">

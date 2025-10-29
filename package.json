@@ -1,5 +1,5 @@
 {
-  "name": "linzhe-dictionary",
+  "name": "linzhe.dictionary",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,9 +8,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint .",
+    "lint": "prettier --write . && eslint . --fix",
     "db:generate": "drizzle-kit generate",
-    "migrate:deploy": "nuxi dev --remote"
+    "compact-word-json": "node scripts/compact-word-json.js"
   },
   "dependencies": {
     "@nuxt/eslint": "1.9.0",

@@ -172,9 +172,9 @@ watch([() => props.activeDates, () => props.startYear], formatActiveDates, {
     <div class="absolute text-xs" style="top: 12px">Mon</div>
     <div class="absolute text-xs" style="top: 40px">Wed</div>
     <div class="absolute text-xs" style="top: 68px">Fri</div>
-    <div class="ml-8 mt-[40px] flex gap-[2px]">
+    <div class="mt-10 ml-8 flex gap-0.5">
       <!-- eslint-disable-next-line vue/require-v-for-key -->
-      <div v-for="week of weeks" class="flex flex-col gap-[2px]">
+      <div v-for="week of weeks" class="flex flex-col gap-0.5">
         <!-- eslint-disable-next-line vue/require-v-for-key -->
         <div
           v-for="day of week.filter((i) => i.isEmpty)"
