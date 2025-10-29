@@ -2,12 +2,11 @@
 import PhraseForm from '../components/PhraseForm.vue'
 
 definePageMeta({
+  layout: 'phrases-layout',
   middleware: 'auth',
 })
-
-const router = useRouter()
 </script>
 
 <template>
-  <PhraseForm mode="add" @saved="() => router.go(-1)" />
+  <PhraseForm mode="add" />
 </template>

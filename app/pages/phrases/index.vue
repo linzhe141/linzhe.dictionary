@@ -2,6 +2,7 @@
 import ImagePreview from './components/ImagePreview.vue'
 
 definePageMeta({
+  layout: 'phrases-layout',
   middleware: 'auth',
 })
 
@@ -40,21 +41,8 @@ const deletePhrase = (id: number) => {
 </script>
 
 <template>
-  <div
-    class="mx-auto min-h-screen max-w-[842px] border-r border-l border-[#2f3336] pb-4"
-  >
-    <!-- 顶部导航栏 -->
-    <div
-      class="flex h-14 items-center justify-between border-b border-[#2f3336] px-4"
-    >
-      <div class="flex items-center gap-4">
-        <UIcon
-          name="i-heroicons-arrow-long-left"
-          class="size-6 cursor-pointer hover:text-gray-300"
-          @click="() => router.push('/home')"
-        />
-        <h1 class="text-lg font-semibold">短语 / 口语搭配</h1>
-      </div>
+  <div>
+    <div class="sticky top-14 z-10 mb-4 flex justify-end bg-black/80 p-4 py-3">
       <UButton
         color="primary"
         size="sm"
@@ -64,8 +52,6 @@ const deletePhrase = (id: number) => {
         创建短语
       </UButton>
     </div>
-
-    <!-- 短语列表 -->
     <div v-if="phrases" class="p-4">
       <div
         v-if="phrases.length === 0"

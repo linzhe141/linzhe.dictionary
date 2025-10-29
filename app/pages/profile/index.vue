@@ -115,11 +115,7 @@ onMounted(() => {
     class="mx-auto max-w-[842px] border-r border-b border-l border-[#2f3336] pb-4"
   >
     <div class="flex h-10 items-center px-2">
-      <UIcon
-        name="i-heroicons-arrow-long-left"
-        class="size-6 cursor-pointer"
-        @click="() => router.go(-1)"
-      ></UIcon>
+      <RouterBack></RouterBack>
       <div class="ml-10">
         <div>{{ profileInfo.nickname ?? '--' }}</div>
         <div class="text-xs text-gray-400">
@@ -299,5 +295,9 @@ onMounted(() => {
         ></ActivityOverview>
       </div>
     </div>
+
+    <LogoLink
+      class="fixed top-[100px] -translate-x-[300px] rotate-90"
+    ></LogoLink>
   </div>
 </template>

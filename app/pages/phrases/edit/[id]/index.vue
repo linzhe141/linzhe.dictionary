@@ -2,14 +2,14 @@
 import PhraseForm from '../../components/PhraseForm.vue'
 
 definePageMeta({
+  layout: 'phrases-layout',
   middleware: 'auth',
 })
 
 const route = useRoute()
-const router = useRouter()
 const phraseId = route.params.id as string
 </script>
 
 <template>
-  <PhraseForm mode="edit" :phrase-id="phraseId" @saved="() => router.go(-1)" />
+  <PhraseForm mode="edit" :phrase-id="phraseId" />
 </template>

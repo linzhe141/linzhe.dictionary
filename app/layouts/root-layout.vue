@@ -1,39 +1,31 @@
-<script setup lang="ts">
-const showIcon = ref(false)
-function toTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
-}
-function scrollHandle() {
-  showIcon.value = window.scrollY > 200
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', scrollHandle)
-})
-onUnmounted(() => {
-  window.removeEventListener('scroll', scrollHandle)
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
-    <div
-      class="fixed top-0 right-0 left-0 z-10 flex h-10 items-center bg-green-500 leading-10"
+    <!-- 顶部导航栏 -->
+    <header
+      class="fixed top-0 right-0 left-0 z-50 transition-all duration-300"
+      :class="[
+        'bg-gray-900/95',
+        'shadow-primary/5 border-b border-gray-800 shadow-lg backdrop-blur-lg',
+      ]"
     >
-      <h1 class="w-full text-center text-2xl">
-        <ULink to="/" class="text-white"> dictionary!!! </ULink>
-      </h1>
-    </div>
-    <div class="mt-10"><slot /></div>
-    <div class="fixed right-2 bottom-2" @click="toTop">
-      <UIcon
-        v-if="showIcon"
-        name="i-heroicons-arrow-up-circle-16-solid"
-        class="size-6 cursor-pointer text-green-400"
-      />
-    </div>
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="flex h-16 items-center justify-between">
+          <!-- Logo 区域 -->
+          <LogoLink></LogoLink>
+
+          <!-- 右侧功能区（可扩展） -->
+          <div class="flex items-center gap-2">
+            <!-- 预留位置，可添加搜索、用户菜单等 -->
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="min-h-screen pt-16">
+      <slot />
+    </main>
   </div>
 </template>

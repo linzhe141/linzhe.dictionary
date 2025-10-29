@@ -61,13 +61,9 @@ function showDetail() {
     class="mx-auto min-h-screen max-w-[842px] border-r border-l border-[#2f3336] pb-4"
   >
     <div
-      class="sticky top-0 z-10 mb-2 flex h-10 items-center justify-between bg-[#121212] px-2"
+      class="sticky top-0 z-10 mb-2 flex h-10 items-center justify-between border-b border-[#2f3336] bg-black/90 px-2"
     >
-      <UIcon
-        name="i-heroicons-arrow-long-left"
-        class="size-6 cursor-pointer"
-        @click="() => router.go(-1)"
-      ></UIcon>
+      <RouterBack></RouterBack>
       <UIcon
         name="i-heroicons-arrow-path-rounded-square-solid"
         class="mt-2 size-6 cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110 hover:rotate-12"
@@ -169,5 +165,8 @@ function showDetail() {
         </UCard>
       </div>
     </template>
+    <LogoLink
+      class="fixed top-[100px] -translate-x-[300px] rotate-90"
+    ></LogoLink>
   </div>
 </template>

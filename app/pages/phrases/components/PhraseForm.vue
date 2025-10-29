@@ -26,7 +26,6 @@ const form = reactive<PhraseForm>({
   content: '',
 })
 
-const showPreview = ref(false)
 const fileInputRef = ref<HTMLInputElement>()
 
 const handleImageUpload = async (event: Event) => {
@@ -61,10 +60,6 @@ const removeImage = () => {
 
 const triggerFileInput = () => {
   fileInputRef.value?.click()
-}
-
-const togglePreview = () => {
-  showPreview.value = !showPreview.value
 }
 
 const handlePaste = (event: ClipboardEvent) => {
@@ -163,7 +158,7 @@ const savePhrase = async () => {
         description: '短语更新成功',
       })
     }
-
+    router.push('/phrases')
     emit('saved')
   } catch (error) {
     toast.add({
@@ -175,59 +170,8 @@ const savePhrase = async () => {
 </script>
 
 <template>
-  <div
-    class="mx-auto min-h-screen max-w-[842px] border-r border-l border-[#2f3336] pb-4"
-  >
-    <!-- 顶部导航栏 -->
-    <div
-      class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-[#2f3336] bg-black/80 px-4 backdrop-blur-sm"
-    >
-      <div class="flex items-center gap-4">
-        <UIcon
-          name="i-heroicons-arrow-long-left"
-          class="size-6 cursor-pointer hover:text-gray-300"
-          @click="() => router.go(-1)"
-        />
-        <h1 class="text-lg font-semibold">
-          {{ props.mode === 'add' ? '创建短语' : '编辑短语' }}
-        </h1>
-      </div>
-      <div class="flex items-center gap-2">
-        <UButton
-          variant="ghost"
-          size="sm"
-          :icon="showPreview ? 'i-heroicons-pencil-square' : 'i-heroicons-eye'"
-          @click="togglePreview"
-        >
-          {{ showPreview ? '编辑' : '预览' }}
-        </UButton>
-        <UButton
-          color="primary"
-          size="sm"
-          :disabled="!form.content"
-          @click="savePhrase"
-        >
-          保存
-        </UButton>
-      </div>
-    </div>
-
-    <!-- 预览模式 -->
-    <div v-if="showPreview" class="p-6">
-      <div
-        class="hover:bg-[#1a1d23 rounded-lg border border-[#2f3336] bg-[#16181c] p-4 transition-colors"
-      >
-        <div v-if="form.imagePreview" class="mb-6">
-          <ImagePreview :image="form.imagePreview" />
-        </div>
-        <div class="mb-3 font-mono text-sm leading-relaxed whitespace-pre-wrap">
-          {{ form.content || '短语内容将在这里显示' }}
-        </div>
-      </div>
-    </div>
-
-    <!-- 编辑模式 -->
-    <div v-else class="p-6">
+  <div>
+    <div class="p-6">
       <div class="space-y-6">
         <!-- 图片上传区域 -->
         <div>
@@ -257,12 +201,7 @@ const savePhrase = async () => {
           </div>
 
           <div v-else class="relative">
-            <img
-              :src="form.imagePreview"
-              alt="预览"
-              class="w-full rounded-lg object-cover"
-              style="max-height: 300px"
-            />
+            <ImagePreview :image="form.imagePreview" />
             <UButton
               icon="i-heroicons-x-mark"
               size="sm"
@@ -296,6 +235,9 @@ const savePhrase = async () => {
           description="你可以使用 ^ 符号标注翻译，换行分段，或者使用任何你喜欢的方式来组织内容。"
         />
       </div>
+    </div>
+    <div class="flex justify-end border-t border-[#2f3336] bg-[#121212] p-4">
+      <UButton color="primary" @click="savePhrase"> 保存 </UButton>
     </div>
   </div>
 </template>
