@@ -1,31 +1,23 @@
 <script setup lang="ts">
 import ImgCropper from '~/components/img-cropper.vue'
 import ActivityOverview from '~/components/activity-overview.vue'
+import { getProfileInfo, userInfoStore } from '~/store/userInfo'
 
 definePageMeta({
   middleware: 'auth',
   keepalive: true,
 })
 
-const router = useRouter()
 const startYear = new Date().getFullYear()
 const isOpen = ref(false)
 const isImgCropperOpen = ref(false)
 
-const profileInfo = reactive({
-  createTime: '',
-  vocabularySum: 0,
-  username: '',
-  nickname: '',
-  bio: '',
-  bgImage: '',
-  avatarImage: '',
-})
+const profileInfo = computed(() => userInfoStore)
 
 let currentkey: 'bgImage' | 'avatarImage' | '' = ''
 
-const editData = reactive({}) as typeof profileInfo
-const editImgData = reactive({}) as typeof profileInfo
+const editData = reactive({}) as typeof profileInfo.value
+const editImgData = reactive({}) as typeof profileInfo.value
 
 const bgInputFile = ref<HTMLInputElement | null>(null)
 const avatarInputFile = ref<HTMLInputElement | null>(null)
@@ -40,12 +32,11 @@ const submitBtnDisabled = ref(false)
 const imgCropper = ref<InstanceType<typeof ImgCropper> | null>(null)
 
 async function processImg() {
-  const data = await $fetch('/api/profiles/info')
-  Object.assign(profileInfo, data)
-  Object.assign(editData, profileInfo)
+  await getProfileInfo()
 }
 
 function clickHandle() {
+  Object.assign(editData, profileInfo.value)
   isOpen.value = true
 }
 
@@ -106,9 +97,6 @@ function formatGroupDate() {
     count,
   }))
 }
-onMounted(() => {
-  processImg()
-})
 </script>
 
 <template>
@@ -120,7 +108,7 @@ onMounted(() => {
       <div class="ml-10">
         <div>{{ profileInfo.nickname ?? '--' }}</div>
         <div class="text-xs text-gray-400">
-          {{ profileInfo.vocabularySum }} words
+          {{ profileInfo.vocabularyList.length }} words
         </div>
       </div>
     </div>

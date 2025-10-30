@@ -1,19 +1,24 @@
 <script setup lang="ts">
+import { getVocabularyCheatSheet, userInfoStore } from '~/store/userInfo'
+
 definePageMeta({
   layout: 'root-layout',
   middleware: 'auth',
   keepalive: true,
 })
 const toast = useToast()
-const { data: words, refresh: _refresh } = await useFetch(
-  '/api/vocabularyCheatSheet',
-)
-
-const wordsList = ref(words.value?.map((i) => ({ ...i, showMeaning: true })))
+const words = computed(() => userInfoStore.vocabularyList)
+type WordItem = { showMeaning: boolean } & (typeof words.value)[0]
+const wordsList = ref<WordItem[]>([])
+const loading = computed(() => userInfoStore.loadingVocabularyList)
 watch(
-  words,
-  () =>
-    (wordsList.value = words.value?.map((i) => ({ ...i, showMeaning: true }))),
+  () => words.value,
+  () => {
+    wordsList.value = words.value?.map((i) => ({ ...i, showMeaning: true }))
+  },
+  {
+    immediate: true,
+  },
 )
 function clickLight(item: any) {
   item.showMeaning = !item.showMeaning
@@ -21,7 +26,7 @@ function clickLight(item: any) {
 
 async function deleteWord(item: any) {
   await $fetch('/api/vocabularyCheatSheet/' + item.id, { method: 'delete' })
-  _refresh()
+  getVocabularyCheatSheet()
 }
 
 function downloadJSON() {
@@ -64,19 +69,22 @@ async function uploadJSON(inputEl: HTMLInputElement) {
   } catch (e) {
     console.log(e)
   }
-  _refresh()
+  getVocabularyCheatSheet()
   inputEl.value = ''
 }
+
+const pageSize = 10
+const currentPage = ref(1)
+const pagedWords = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return wordsList.value.slice(start, start + pageSize)
+})
 </script>
 
 <template>
   <div class="mx-auto max-w-[1200px] p-2">
     <div class="flex justify-between">
-      <UBreadcrumb
-        class="text-lg"
-        divider="/"
-        :links="[{ label: '主页', to: '/home' }, { label: '生词本' }]"
-      />
+      <RouterBack></RouterBack>
       <div>
         <UButton v-if="wordsList?.length" class="mr-3" @click="downloadJSON">
           下载JSON文件
@@ -94,14 +102,26 @@ async function uploadJSON(inputEl: HTMLInputElement) {
         </UButton>
       </div>
     </div>
+    <div v-if="loading" class="flex justify-center">
+      <UIcon
+        name="i-heroicons-arrow-path"
+        class="size-8 animate-spin text-gray-400"
+      />
+    </div>
+    <div v-else-if="wordsList?.length === 0">
+      <UCard>
+        <div class="text-red-300">当前没有收录的生词!</div>
+      </UCard>
+    </div>
+
     <div class="grid grid-cols-1 gap-2 p-2 lg:grid-cols-2">
       <UCard
-        v-for="(item, index) in wordsList"
+        v-for="(item, index) in pagedWords"
         :key="item.word"
         :class="{
           'normal-text': true,
           'lg:col-span-2':
-            wordsList!.length % 2 !== 0 && index === wordsList!.length - 1,
+            pagedWords!.length % 2 !== 0 && index === pagedWords!.length - 1,
         }"
       >
         <template #header>
@@ -152,10 +172,13 @@ async function uploadJSON(inputEl: HTMLInputElement) {
         </template>
       </UCard>
     </div>
-    <div v-if="wordsList?.length === 0">
-      <UCard>
-        <div class="text-red-300">当前没有收录的生词!</div>
-      </UCard>
-    </div>
+
+    <Pagination
+      v-if="wordsList?.length"
+      v-model:current="currentPage"
+      class="mt-6"
+      :total-items="wordsList.length"
+      :page-size="pageSize"
+    ></Pagination>
   </div>
 </template>

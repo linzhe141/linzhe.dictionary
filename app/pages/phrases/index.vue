@@ -9,12 +9,12 @@ definePageMeta({
 })
 
 const router = useRouter()
+const route = useRoute()
 
-// 分页状态
-const currentPage = ref(1)
+// 从 URL 获取初始页码
+const currentPage = ref(Number(route.query.page) || 1)
 const pageSize = 10
 
-// 使用 useFetch 的缓存功能
 const {
   data: phrasesData,
   pending,
@@ -25,8 +25,18 @@ const {
 
 // 计算属性
 const phrases = computed(() => phrasesData.value?.data || [])
-const totalPages = computed(() => phrasesData.value?.totalPages || 1)
 const total = computed(() => phrasesData.value?.total || 0)
+
+// 监听 URL 变化，更新当前页
+watch(
+  () => route.query.page,
+  (newPage) => {
+    const page = Number(newPage) || 1
+    if (page !== currentPage.value) {
+      currentPage.value = page
+    }
+  },
+)
 
 // 格式化日期
 const formatDate = (time: string) => {
@@ -81,12 +91,17 @@ const deletePhrase = async () => {
   }
 }
 
-// 翻页
+// 翻页 - 更新 URL
 const goToPage = (page: number) => {
-  if (page < 1 || page > totalPages.value) return
-  currentPage.value = page
+  router.push({
+    query: {
+      ...route.query,
+      page: page.toString(),
+    },
+  })
+
   // 滚动到顶部
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: 'auto' })
 }
 </script>
 
@@ -112,22 +127,13 @@ const goToPage = (page: number) => {
     </div>
 
     <div v-else class="p-4">
-      <!-- 统计信息 -->
-      <div v-if="total > 0" class="mb-4 text-sm text-gray-500">
-        共 {{ total }} 条短语，第 {{ currentPage }} / {{ totalPages }} 页
-      </div>
-
-      <!-- 空状态 -->
       <div
         v-if="phrases.length === 0"
         class="flex flex-col items-center justify-center py-20"
       >
-        <UIcon
-          name="i-heroicons-document-text"
-          class="mb-4 size-16 text-gray-600"
-        />
-        <p class="mb-2 text-gray-400">还没有短语</p>
-        <p class="mb-4 text-sm text-gray-500">点击右上角创建你的第一个短语</p>
+        <UIcon name="i-heroicons-document-text" class="mb-4 size-16" />
+        <p class="mb-2">还没有短语</p>
+        <p class="mb-4 text-sm">点击右上角创建你的第一个短语</p>
       </div>
 
       <!-- 短语列表 -->
@@ -170,68 +176,13 @@ const goToPage = (page: number) => {
         </div>
       </div>
 
-      <!-- 分页控件 -->
-      <div class="mt-6 flex items-center justify-center gap-2">
-        <UButton
-          variant="outline"
-          size="sm"
-          icon="i-heroicons-chevron-left"
-          :disabled="currentPage === 1"
-          @click="goToPage(currentPage - 1)"
-        >
-          上一页
-        </UButton>
-
-        <div class="flex gap-1">
-          <!-- 第一页 -->
-          <UButton
-            v-if="currentPage > 3"
-            variant="ghost"
-            size="sm"
-            @click="goToPage(1)"
-          >
-            1
-          </UButton>
-          <span v-if="currentPage > 4" class="flex items-center px-2">...</span>
-
-          <!-- 当前页附近的页码 -->
-          <template v-for="page in totalPages" :key="page">
-            <UButton
-              v-if="Math.abs(page - currentPage) <= 2"
-              :variant="page === currentPage ? 'solid' : 'ghost'"
-              size="sm"
-              @click="goToPage(page)"
-            >
-              {{ page }}
-            </UButton>
-          </template>
-
-          <!-- 最后一页 -->
-          <span
-            v-if="currentPage < totalPages - 3"
-            class="flex items-center px-2"
-            >...</span
-          >
-          <UButton
-            v-if="currentPage < totalPages - 2"
-            variant="ghost"
-            size="sm"
-            @click="goToPage(totalPages)"
-          >
-            {{ totalPages }}
-          </UButton>
-        </div>
-
-        <UButton
-          variant="outline"
-          size="sm"
-          icon="i-heroicons-chevron-right"
-          :disabled="currentPage === totalPages"
-          @click="goToPage(currentPage + 1)"
-        >
-          下一页
-        </UButton>
-      </div>
+      <Pagination
+        class="mt-6"
+        :total-items="total"
+        :page-size="pageSize"
+        :current="currentPage"
+        @update:page="goToPage"
+      ></Pagination>
     </div>
 
     <!-- 删除确认对话框 -->

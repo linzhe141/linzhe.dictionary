@@ -160,7 +160,7 @@ const savePhrase = async () => {
         description: '短语更新成功',
       })
     }
-    router.push('/phrases')
+    router.back()
     emit('saved')
   } catch (error) {
     toast.add({

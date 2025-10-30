@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { userInfoStore } from '~/store/userInfo'
 import type { Word } from '~~/types'
 
 definePageMeta({
   middleware: 'auth',
   keepalive: true,
 })
-const router = useRouter()
 const dictionaryRef = inject('dictionaryRef') as Ref<Word[]>
-const { data: words } = await useFetch('/api/vocabularyCheatSheet')
+
+const words = computed(() => userInfoStore.vocabularyList)
+
 function getRandomElement<T extends Record<string, any>>(array: T[]) {
   if (array.length === 0) {
     return undefined

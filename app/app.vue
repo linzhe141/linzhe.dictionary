@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import WordsListProvider from './provider/WordsListProvider'
+import MergeUserinfoIfLogin from './provider/MergeUserinfoIfLogin'
 
 useHead({
   htmlAttrs: {
@@ -41,6 +42,7 @@ onUnmounted(() => {
 
 <template>
   <UApp>
+    <MergeUserinfoIfLogin />
     <WordsListProvider>
       <NuxtLayout>
         <!-- router-view 入口？ -->

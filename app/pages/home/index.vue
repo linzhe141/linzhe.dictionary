@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Word } from '~~/types'
+import { userInfoStore } from '~/store/userInfo'
 
 definePageMeta({
   layout: 'root-layout',
-  keepalive: true,
 })
 const router = useRouter()
 const route = useRoute()
@@ -11,7 +11,7 @@ const route = useRoute()
 const user = useCookie('user')
 // @ts-expect-error
 const name = (user.value ?? {}).name
-const img = ref('')
+const img = computed(() => userInfoStore.avatarImage)
 
 function generateWord() {
   const letters = 'abcdefghijklmnopqrstuvwxyz'
@@ -63,11 +63,6 @@ function submit() {
 }
 
 const initLoading = computed(() => dictionaryRef.value.length === 0)
-async function init() {
-  $fetch('/api/profiles/info').then((res) => {
-    if (res.avatarImage) img.value = res.avatarImage
-  })
-}
 const toast = useToast()
 async function addWordToCheatSheet(word: Word) {
   const { data, error, status } = await useFetch('/api/vocabularyCheatSheet', {
@@ -94,10 +89,6 @@ function generateExistWord() {
     }
   }
 }
-
-onMounted(() => {
-  init()
-})
 
 watch(
   () => dictionaryRef.value,
