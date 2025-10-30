@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, reactive, ref } from 'vue'
 import ImagePreview from './ImagePreview.vue'
+import ViewContent from './ViewContent.vue'
 
 const props = defineProps<{
   mode: 'add' | 'edit'
@@ -26,6 +27,7 @@ const form = reactive<PhraseForm>({
   content: '',
 })
 
+const showPreview = ref(false)
 const fileInputRef = ref<HTMLInputElement>()
 
 const handleImageUpload = async (event: Event) => {
@@ -214,10 +216,17 @@ const savePhrase = async () => {
 
         <!-- 短语内容 -->
         <div>
-          <label class="mb-2 block text-sm font-medium text-gray-300">
-            短语内容 <span class="text-red-500">*</span>
-          </label>
+          <div class="mb-2 flex items-center justify-between">
+            <label class="text-sm font-medium text-gray-300">
+              短语内容 <span class="text-red-500">*</span>
+            </label>
+            <UButton @click="showPreview = !showPreview">{{
+              showPreview ? '编辑' : '预览'
+            }}</UButton>
+          </div>
+          <ViewContent v-if="showPreview" :content="form.content"></ViewContent>
           <UTextarea
+            v-else
             v-model="form.content"
             class="w-full font-mono"
             placeholder="在此输入短语内容..."
