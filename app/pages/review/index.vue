@@ -3,6 +3,7 @@ import type { Word } from '~~/types'
 
 definePageMeta({
   middleware: 'auth',
+  keepalive: true,
 })
 const router = useRouter()
 const dictionaryRef = inject('dictionaryRef') as Ref<Word[]>

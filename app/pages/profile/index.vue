@@ -4,6 +4,7 @@ import ActivityOverview from '~/components/activity-overview.vue'
 
 definePageMeta({
   middleware: 'auth',
+  keepalive: true,
 })
 
 const router = useRouter()

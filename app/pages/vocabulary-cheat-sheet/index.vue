@@ -2,6 +2,7 @@
 definePageMeta({
   layout: 'root-layout',
   middleware: 'auth',
+  keepalive: true,
 })
 const toast = useToast()
 const { data: words, refresh: _refresh } = await useFetch(

@@ -24,7 +24,7 @@
     "nuxt": "3.17.5",
     "tippy.js": "6.3.7",
     "uuid": "13.0.0",
-    "vue-mdr": "0.0.12"
+    "vue-mdr": "0.0.13"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "1.9.0",

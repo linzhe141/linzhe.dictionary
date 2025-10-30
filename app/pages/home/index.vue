@@ -3,6 +3,7 @@ import type { Word } from '~~/types'
 
 definePageMeta({
   layout: 'root-layout',
+  keepalive: true,
 })
 const router = useRouter()
 const route = useRoute()
