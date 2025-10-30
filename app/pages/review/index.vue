@@ -21,7 +21,16 @@ function getRandomElement<T extends Record<string, any>>(array: T[]) {
   return { ...result, showDetail: false, showMeaning: false }
 }
 
-const curWord = ref(words.value ? getRandomElement(words.value) : undefined)
+const loading = computed(() => userInfoStore.loadingVocabularyList)
+
+const curWord = ref(getRandomElement(words.value))
+watch(
+  () => words.value,
+  () => {
+    if (words.value) curWord.value = getRandomElement(words.value)
+  },
+  { immediate: true },
+)
 function changeWord() {
   const target = getRandomElement(words.value!)
   detail.value = null
@@ -73,7 +82,13 @@ function showDetail() {
         @click="changeWord"
       />
     </div>
-    <div v-if="!curWord" class="mx-2">
+    <div v-if="loading" class="flex justify-center">
+      <UIcon
+        name="i-heroicons-arrow-path"
+        class="size-8 animate-spin text-gray-400"
+      />
+    </div>
+    <div v-else-if="!curWord" class="mx-2">
       <UCard>
         <div class="text-red-300">当前没有收录的生词!</div>
       </UCard>
