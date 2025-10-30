@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ImagePreview from './components/ImagePreview.vue'
-import { VueMarkdownRenderer } from 'vue-mdr'
+import ViewContent from './components/ViewContent.vue'
 
 definePageMeta({
   layout: 'phrases-layout',
@@ -78,14 +78,7 @@ const deletePhrase = (id: number) => {
           </div>
 
           <!-- 短语内容 -->
-          <div
-            class="prose dark:prose-invert prose-sm mb-3 max-w-none font-mono"
-          >
-            <VueMarkdownRenderer
-              :source="phrase.content"
-              theme="dark"
-            ></VueMarkdownRenderer>
-          </div>
+          <ViewContent class="mb-3" :content="phrase.content"></ViewContent>
 
           <!-- 底部信息 -->
           <div class="flex items-center justify-between text-xs text-gray-500">

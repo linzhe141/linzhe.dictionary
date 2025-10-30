@@ -42,8 +42,8 @@ importers:
         specifier: 13.0.0
         version: 13.0.0
       vue-mdr:
-        specifier: 0.0.11
-        version: 0.0.11(vue@3.5.22(typescript@5.9.3))
+        specifier: 0.0.12
+        version: 0.0.12(vue@3.5.22(typescript@5.9.3))
     devDependencies:
       '@nuxt/eslint-config':
         specifier: 1.9.0
@@ -5371,8 +5371,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  vue-mdr@0.0.11:
-    resolution: {integrity: sha512-g+qI3rbuLFz3AvM6Rx34KfkXmL4B2f/HEAbsVSfpaMZziVJakl5g/yPRraA1ktTBmdCWmN9I9Iio/CQULvxkfQ==}
+  vue-mdr@0.0.12:
+    resolution: {integrity: sha512-ounceRAYgS6Q5eKiPiyRbHw/KgySJ5XR3LwFKCg254fCN5cxIb2/r/5fJM81Jhlja1JiABgEmv3+r8CiAGk51Q==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -11412,7 +11412,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue-mdr@0.0.11(vue@3.5.22(typescript@5.9.3)):
+  vue-mdr@0.0.12(vue@3.5.22(typescript@5.9.3)):
     dependencies:
       '@shikijs/core': 3.14.0
       '@shikijs/langs': 3.14.0
