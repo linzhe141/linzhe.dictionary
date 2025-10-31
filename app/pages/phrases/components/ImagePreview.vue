@@ -26,7 +26,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
         :src="image"
         alt="短语配图"
         class="object-cover transition-transform duration-300 group-hover:scale-105"
-        style="max-height: 600px"
+        style="height: 300px"
       />
 
       <!-- 上下渐变阴影 -->

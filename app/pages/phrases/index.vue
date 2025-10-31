@@ -177,7 +177,7 @@ const goToPage = (page: number) => {
       </div>
 
       <Pagination
-        class="mt-6"
+        class="my-20"
         :total-items="total"
         :page-size="pageSize"
         :current="currentPage"

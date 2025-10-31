@@ -34,10 +34,9 @@ function goToPage(page: number) {
       :disabled="currentPage === 1"
       @click="goToPage(currentPage - 1)"
     >
-      上一页
     </UButton>
 
-    <div class="flex gap-1">
+    <div class="flex gap-0.5">
       <!-- 第一页 -->
       <UButton
         v-if="currentPage > 3"
@@ -82,7 +81,6 @@ function goToPage(page: number) {
       :disabled="currentPage === totalPages"
       @click="() => goToPage(currentPage + 1)"
     >
-      下一页
     </UButton>
   </div>
 </template>

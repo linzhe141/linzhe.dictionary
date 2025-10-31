@@ -176,7 +176,7 @@ const pagedWords = computed(() => {
     <Pagination
       v-if="wordsList?.length"
       v-model:current="currentPage"
-      class="mt-6"
+      class="my-20"
       :total-items="wordsList.length"
       :page-size="pageSize"
     ></Pagination>

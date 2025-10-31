@@ -192,6 +192,7 @@ const savePhrase = async () => {
           <div
             v-if="!form.imagePreview"
             class="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#2f3336] bg-[#16181c] py-12 transition-colors hover:border-gray-500"
+            style="height: 300px"
             @click="triggerFileInput"
           >
             <UIcon
