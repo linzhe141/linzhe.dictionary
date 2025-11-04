@@ -165,11 +165,12 @@ const goToPage = (page: number) => {
               </UButton>
               <UButton
                 variant="ghost"
+                disabled
                 size="xs"
                 icon="i-heroicons-trash"
                 @click="openDeleteDialog(phrase.id)"
               >
-                删除
+                TODO 删除
               </UButton>
             </div>
           </div>
