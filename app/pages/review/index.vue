@@ -128,9 +128,10 @@ function showDetail() {
             </span>
             <UIcon
               name="i-heroicons-speaker-wave"
-              class="cursor-pointer hover:text-green-400"
+              class="mr-2 cursor-pointer hover:text-green-400"
               @click="() => playAudio(curWord!.word)"
             />
+            <GooglePronounce :word="curWord.word"></GooglePronounce>
           </div>
         </div>
         <template v-if="curWord.showMeaning">
@@ -159,9 +160,10 @@ function showDetail() {
               </span>
               <UIcon
                 name="i-heroicons-speaker-wave"
-                class="cursor-pointer hover:text-green-400"
+                class="mr-2 cursor-pointer hover:text-green-400"
                 @click="() => playAudio(item.word)"
               />
+              <GooglePronounce :word="item.word"></GooglePronounce>
             </div>
           </div>
           <template v-if="item.showMeaning">
