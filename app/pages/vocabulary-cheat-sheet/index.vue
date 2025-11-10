@@ -25,8 +25,14 @@ function clickLight(item: any) {
 }
 
 async function deleteWord(item: any) {
-  await $fetch('/api/vocabularyCheatSheet/' + item.id, { method: 'delete' })
-  getVocabularyCheatSheet()
+  if (item.loading) return
+  item.loading = true
+  try {
+    await $fetch('/api/vocabularyCheatSheet/' + item.id, { method: 'delete' })
+    getVocabularyCheatSheet()
+  } finally {
+    item.loading = false
+  }
 }
 
 function downloadJSON() {
@@ -77,7 +83,18 @@ const pageSize = 10
 const currentPage = ref(1)
 const pagedWords = computed(() => {
   const start = (currentPage.value - 1) * pageSize
-  return wordsList.value.slice(start, start + pageSize)
+  return wordsList.value.slice(start, start + pageSize).map((i) => {
+    const target = toValue(i) as any
+    return {
+      ...i,
+      get loading() {
+        return target.loading || false
+      },
+      set loading(newValue: boolean) {
+        target.loading = newValue
+      },
+    }
+  })
 })
 </script>
 
@@ -140,6 +157,7 @@ const pagedWords = computed(() => {
               <UIcon
                 name="i-heroicons-trash"
                 class="mt-2 ml-3 size-5 text-red-500"
+                :class="{ 'cursor-not-allowed': item.loading }"
                 @click="() => deleteWord(item)"
               />
               <UIcon
