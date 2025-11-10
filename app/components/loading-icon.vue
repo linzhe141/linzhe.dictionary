@@ -5,7 +5,7 @@ const { color = '0f172b' } = defineProps<{
 </script>
 
 <template>
-  <div class="size-4">
+  <div class="size-5">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
       <circle
         ::fill="color"

@@ -42,21 +42,23 @@ function sortStringsByOf(data: Word[]) {
   })
 }
 function submit() {
-  if (word.value.length <= 1) {
+  const submitWord = word.value.trim()
+  word.value = submitWord
+  if (submitWord.length <= 1) {
     toast.add({ title: '至少输入两个字符', color: 'error' })
     return
   }
   isNotFound.value = false
-  router.replace({ query: { word: word.value } })
+  router.replace({ query: { word: submitWord } })
   submitList.value = sortStringsByOf(
-    dictionaryRaw.filter((i) => i.word.includes(word.value)),
+    dictionaryRaw.filter((i) => i.word.includes(submitWord)),
   )
     .map((i) => ({
       ...i,
       addLoading: false,
       colorWord: i.word.replace(
-        new RegExp(word.value),
-        `<span class="text-green-500">${word.value}</span>`,
+        new RegExp(submitWord),
+        `<span class="text-green-500">${submitWord}</span>`,
       ),
     }))
     .slice(0, 10)
@@ -207,7 +209,7 @@ watch(
             @click="() => addWordToCheatSheet(item)"
           >
             <LoadingIcon v-if="item.addLoading" color="#e2e8f0"></LoadingIcon>
-            <UIcon v-else class="size-4" name="i-heroicons-plus-circle">
+            <UIcon v-else class="size-5" name="i-heroicons-plus-circle">
             </UIcon>
             添加至生词本
           </UButton>
