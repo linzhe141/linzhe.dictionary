@@ -117,9 +117,12 @@ const loadPhrase = async (id: string) => {
   }
 }
 
+const loading = ref(false)
 const savePhrase = async () => {
+  if (loading.value) return
   if (!form.content.trim()) {
     toast.add({
+      color: 'warning',
       title: '提示',
       description: '请输入短语内容',
     })
@@ -127,6 +130,7 @@ const savePhrase = async () => {
   }
 
   try {
+    loading.value = true
     let imagePath = null
     if (form.image) {
       const { pathname } = await uploadImage(form.image)
@@ -164,9 +168,12 @@ const savePhrase = async () => {
     emit('saved')
   } catch (error) {
     toast.add({
+      color: 'error',
       title: '错误',
       description: '保存失败，请重试',
     })
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -247,7 +254,14 @@ const savePhrase = async () => {
       </div>
     </div>
     <div class="flex justify-end border-t border-[#2f3336] bg-[#121212] p-4">
-      <UButton color="primary" @click="savePhrase"> 保存 </UButton>
+      <UButton
+        color="primary"
+        class="flex items-center gap-2"
+        @click="savePhrase"
+      >
+        <LoadingIcon v-if="loading"></LoadingIcon>
+        保存
+      </UButton>
     </div>
   </div>
 </template>

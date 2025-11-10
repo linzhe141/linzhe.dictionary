@@ -22,11 +22,14 @@ function generateWord() {
   const part = randomLetter1 + randomLetter2
   return part
 }
+type Loading = {
+  addLoading: boolean
+}
 
 let dictionaryRaw: Word[] = []
 const dictionaryRef = inject('dictionaryRef') as Ref<Word[]>
 const word = ref<string>(route.query.word as string)
-const submitList = ref<Word[]>([])
+const submitList = ref<(Word & Loading)[]>([])
 const isNotFound = ref(false)
 function sortStringsByOf(data: Word[]) {
   return data.sort((a, b) => {
@@ -50,6 +53,7 @@ function submit() {
   )
     .map((i) => ({
       ...i,
+      addLoading: false,
       colorWord: i.word.replace(
         new RegExp(word.value),
         `<span class="text-green-500">${word.value}</span>`,
@@ -64,20 +68,29 @@ function submit() {
 
 const initLoading = computed(() => dictionaryRef.value.length === 0)
 const toast = useToast()
-async function addWordToCheatSheet(word: Word) {
-  const { data, error, status } = await useFetch('/api/vocabularyCheatSheet', {
-    method: 'post',
-    body: { ...word, trans: word.trans.join(';') },
-  })
-  if (status.value === 'error' && error.value?.statusCode === 401) {
-    const uri = location.pathname.slice(1) + location.search
-    navigateTo('/login?redirect=' + encodeURIComponent(uri))
-    return
+async function addWordToCheatSheet(word: Word & { addLoading: boolean }) {
+  if (word.addLoading) return
+  word.addLoading = true
+  try {
+    const { data, error, status } = await useFetch(
+      '/api/vocabularyCheatSheet',
+      {
+        method: 'post',
+        body: { ...word, trans: word.trans.join(';') },
+      },
+    )
+    if (status.value === 'error' && error.value?.statusCode === 401) {
+      const uri = location.pathname.slice(1) + location.search
+      navigateTo('/login?redirect=' + encodeURIComponent(uri))
+      return
+    }
+    toast.add({
+      title: data.value?.msg,
+      color: data.value?.success ? 'primary' : 'error',
+    })
+  } finally {
+    word.addLoading = false
   }
-  toast.add({
-    title: data.value?.msg,
-    color: data.value?.success ? 'primary' : 'error',
-  })
 }
 
 function generateExistWord() {
@@ -188,12 +201,14 @@ watch(
             <GooglePronounce :word="item.word"></GooglePronounce>
           </div>
           <UButton
-            icon="i-heroicons-plus-circle"
             size="sm"
             color="neutral"
             variant="outline"
             @click="() => addWordToCheatSheet(item)"
           >
+            <LoadingIcon v-if="item.addLoading"></LoadingIcon>
+            <UIcon v-else class="size-5" name="i-heroicons-plus-circle">
+            </UIcon>
             添加至生词本
           </UButton>
         </div>
