@@ -206,8 +206,8 @@ watch(
             variant="outline"
             @click="() => addWordToCheatSheet(item)"
           >
-            <LoadingIcon v-if="item.addLoading"></LoadingIcon>
-            <UIcon v-else class="size-5" name="i-heroicons-plus-circle">
+            <LoadingIcon v-if="item.addLoading" color="#e2e8f0"></LoadingIcon>
+            <UIcon v-else class="size-4" name="i-heroicons-plus-circle">
             </UIcon>
             添加至生词本
           </UButton>

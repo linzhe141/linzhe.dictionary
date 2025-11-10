@@ -1,9 +1,15 @@
+<script setup lang="ts">
+const { color = '0f172b' } = defineProps<{
+  color?: string
+}>()
+</script>
+
 <template>
-  <div class="size-6">
+  <div class="size-4">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
       <circle
-        fill="#0f172b"
-        stroke="#0f172b"
+        ::fill="color"
+        ::stroke="color"
         stroke-width="15"
         r="15"
         cx="35"
@@ -20,8 +26,8 @@
         ></animate>
       </circle>
       <circle
-        fill="#0f172b"
-        stroke="#0f172b"
+        :fill="color"
+        :stroke="color"
         stroke-width="15"
         opacity=".8"
         r="15"
@@ -39,8 +45,8 @@
         ></animate>
       </circle>
       <circle
-        fill="#0f172b"
-        stroke="#0f172b"
+        :fill="color"
+        :stroke="color"
         stroke-width="15"
         opacity=".6"
         r="15"
@@ -58,8 +64,8 @@
         ></animate>
       </circle>
       <circle
-        fill="#0f172b"
-        stroke="#0f172b"
+        :fill="color"
+        :stroke="color"
         stroke-width="15"
         opacity=".4"
         r="15"
@@ -77,8 +83,8 @@
         ></animate>
       </circle>
       <circle
-        fill="#0f172b"
-        stroke="#0f172b"
+        :fill="color"
+        :stroke="color"
         stroke-width="15"
         opacity=".2"
         r="15"
