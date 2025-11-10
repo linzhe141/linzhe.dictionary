@@ -7,7 +7,7 @@ defineProps<{
 <template>
   <ULink
     target="_blank"
-    :href="`https://www.google.com/search?q=${word} 怎么读怎么发音`"
+    :href="`https://www.google.com/search?q=${word} 怎么发音`"
     class="flex items-center hover:text-green-400"
   >
     <UIcon name="bx:bxl-google"></UIcon>
