@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import ImagePreview from './components/ImagePreview.vue'
-import ViewContent from './components/ViewContent.vue'
-
 definePageMeta({
   layout: 'phrases-layout',
   middleware: 'auth',
@@ -149,7 +146,7 @@ const goToPage = (page: number) => {
           </div>
 
           <!-- 短语内容 -->
-          <ViewContent class="mb-3" :content="phrase.content" />
+          <MarkdownDisplay class="mb-3" :content="phrase.content" />
 
           <!-- 底部信息 -->
           <div class="flex items-center justify-between text-xs text-gray-500">

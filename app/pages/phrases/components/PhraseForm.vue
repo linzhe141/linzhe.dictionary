@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, reactive, ref } from 'vue'
-import ImagePreview from './ImagePreview.vue'
-import ViewContent from './ViewContent.vue'
 
 const props = defineProps<{
   mode: 'add' | 'edit'
@@ -232,7 +230,10 @@ const savePhrase = async () => {
               showPreview ? '编辑' : '预览'
             }}</UButton>
           </div>
-          <ViewContent v-if="showPreview" :content="form.content"></ViewContent>
+          <MarkdownDisplay
+            v-if="showPreview"
+            :content="form.content"
+          ></MarkdownDisplay>
           <UTextarea
             v-else
             v-model="form.content"

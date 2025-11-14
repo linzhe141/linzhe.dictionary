@@ -103,6 +103,12 @@ const pagedWords = computed(() => {
     <div class="flex justify-between">
       <RouterBack></RouterBack>
       <div>
+        <RouterLink
+          v-if="wordsList?.length"
+          to="/vocabulary-cheat-sheet/mock-f1-news"
+          class="mr-3"
+          ><UButton> 🏎️ </UButton></RouterLink
+        >
         <UButton v-if="wordsList?.length" class="mr-3" @click="downloadJSON">
           下载JSON文件
         </UButton>

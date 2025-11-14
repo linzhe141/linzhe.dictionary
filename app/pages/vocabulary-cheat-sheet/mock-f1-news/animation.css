@@ -1,0 +1,57 @@
+.vue-markdown-wrapper > *,
+.vue-markdown-wrapper .text-segmenter,
+.vue-markdown-wrapper .shiki-stream span {
+  animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.race-animation {
+  animation: race-move 1s ease-in-out forwards;
+}
+
+@keyframes race-move {
+  0% {
+    transform: translateX(0px);
+  }
+  20% {
+    transform: translateX(0) scale(1.05);
+  }
+  80% {
+    transform: translateX(1600px) scale(0.8);
+  }
+  81% {
+    transform: translateX(-600px) scale(0);
+  }
+  82% {
+    transform: translateX(-590px) scale(0.7);
+  }
+  95% {
+    transform: translateX(20px) scale(1);
+  }
+  100% {
+    transform: translateX(0px) scale(1);
+  }
+}
+
+.loading-animation {
+  perspective: 800px;
+  animation: race-loading 1s linear infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes race-loading {
+  0% {
+    transform: rotateY(0deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateY(360deg) rotateZ(2100deg);
+  }
+}
