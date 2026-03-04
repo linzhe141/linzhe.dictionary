@@ -8,8 +8,8 @@ export default defineNuxtConfig({
     },
   },
   css: ['~/assets/css/main.css'],
-  future: { compatibilityVersion: 4 },
-  compatibilityDate: '2025-08-15',
+  future: { compatibilityVersion: 5 },
+  compatibilityDate: '2025-04-25',
   nitro: {
     rollupConfig: {
       external: (id) => {
