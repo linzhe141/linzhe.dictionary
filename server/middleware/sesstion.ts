@@ -9,10 +9,10 @@ async function getUserFromSession(event: H3Event) {
   const cookie = getCookie(event, 'user')
   if (!cookie) return null
   const session = JSON.parse(cookie)
-  const user = await useDrizzle()
+  const user = await db
     .select()
-    .from(tables.users)
-    .where(eq(tables.users.id, session.id))
+    .from(schema.users)
+    .where(eq(schema.users.id, session.id))
     .get()
   if (!user || user.name !== session.name) {
     return null

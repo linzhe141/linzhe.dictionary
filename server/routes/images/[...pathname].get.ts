@@ -1,5 +1,7 @@
+import { blob } from 'hub:blob'
+
 export default eventHandler(async (event) => {
   const { pathname } = getRouterParams(event)
 
-  return hubBlob().serve(event, pathname)
+  return blob.serve(event, pathname)
 })

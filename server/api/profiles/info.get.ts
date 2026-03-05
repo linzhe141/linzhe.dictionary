@@ -3,12 +3,12 @@ import dayjs from 'dayjs'
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
   const userId = event.context.user.id
-  const user = await useDrizzle().query.users.findFirst({
-    where: eq(tables.users.id, userId),
+  const user = await db.query.users.findFirst({
+    where: eq(schema.users.id, userId),
     with: { profile: true },
   })
-  const vocabulary = await useDrizzle().query.vocabularyCheatSheet.findMany({
-    where: eq(tables.vocabularyCheatSheet.userId, userId),
+  const vocabulary = await db.query.vocabularyCheatSheet.findMany({
+    where: eq(schema.vocabularyCheatSheet.userId, userId),
   })
   const data = {
     createTime: dayjs(user?.createdAt).format('MMMM YYYY'),

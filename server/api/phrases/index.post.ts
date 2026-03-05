@@ -1,12 +1,13 @@
 import type { Phrase } from '~~/server/utils/drizzle'
+import { db, schema } from 'hub:db'
 
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
   const userId = event.context.user.id
   const { content, image }: Phrase = await readBody(event)
 
-  const data = await useDrizzle()
-    .insert(tables.phrases)
+  const data = await db
+    .insert(schema.phrases)
     .values({
       content,
       image,

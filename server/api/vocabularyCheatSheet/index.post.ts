@@ -1,13 +1,14 @@
 import type { VocabularyCheatSheet } from '~~/server/utils/drizzle'
+import { db, schema } from 'hub:db'
 
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
   const userId = event.context.user.id
   const { word, symbols, trans }: VocabularyCheatSheet = await readBody(event)
-  const words = await useDrizzle()
+  const words = await db
     .select()
-    .from(tables.vocabularyCheatSheet)
-    .where(eq(tables.vocabularyCheatSheet.userId, userId))
+    .from(schema.vocabularyCheatSheet)
+    .where(eq(schema.vocabularyCheatSheet.userId, userId))
     .all()
   if (words.find((i) => i.word === word)) {
     return {
@@ -16,8 +17,8 @@ export default eventHandler(async (event) => {
       msg: '添加失败，该单词已添加至生词本，不可重复添加',
     }
   }
-  const todo = await useDrizzle()
-    .insert(tables.vocabularyCheatSheet)
+  const todo = await db
+    .insert(schema.vocabularyCheatSheet)
     .values({
       word,
       symbols,

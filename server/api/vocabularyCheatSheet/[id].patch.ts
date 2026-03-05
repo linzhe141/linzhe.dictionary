@@ -5,14 +5,14 @@ export default eventHandler(async (event) => {
   const { id } = getRouterParams(event)
   const { word, symbols, trans }: VocabularyCheatSheet = await readBody(event)
 
-  const todo = await useDrizzle()
-    .update(tables.vocabularyCheatSheet)
+  const todo = await db
+    .update(schema.vocabularyCheatSheet)
     .set({
       word,
       symbols,
       trans,
     })
-    .where(eq(tables.vocabularyCheatSheet.id, Number(id)))
+    .where(eq(schema.vocabularyCheatSheet.id, Number(id)))
     .returning()
     .get()
 

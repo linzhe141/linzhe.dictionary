@@ -4,11 +4,11 @@ export default eventHandler(async (event) => {
   await isAuth(event.context.user)
   const userId = event.context.user.id
 
-  const todos = await useDrizzle()
+  const todos = await db
     .select()
-    .from(tables.vocabularyCheatSheet)
-    .where(eq(tables.vocabularyCheatSheet.userId, userId))
-    .orderBy(desc(tables.vocabularyCheatSheet.id))
+    .from(schema.vocabularyCheatSheet)
+    .where(eq(schema.vocabularyCheatSheet.userId, userId))
+    .orderBy(desc(schema.vocabularyCheatSheet.id))
     .all()
 
   return todos

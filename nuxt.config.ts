@@ -10,20 +10,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   future: { compatibilityVersion: 5 },
   compatibilityDate: '2025-04-25',
-  nitro: {
-    rollupConfig: {
-      external: (id) => {
-        return (
-          (id.startsWith('node:') && !id.includes('node:tty')) ||
-          id === 'picomatch' ||
-          id === 'anymatch'
-        )
-      },
-    },
-  },
 
   hub: {
-    database: true,
+    db: 'sqlite',
     cache: true,
     blob: true,
   },

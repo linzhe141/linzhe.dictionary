@@ -2,12 +2,12 @@ export default eventHandler(async (event) => {
   const { id } = getRouterParams(event)
   const { completed }: { completed: boolean } = await readBody(event)
 
-  const todo = await useDrizzle()
-    .update(tables.todos)
+  const todo = await db
+    .update(schema.todos)
     .set({
       completed,
     })
-    .where(eq(tables.todos.id, Number(id)))
+    .where(eq(schema.todos.id, Number(id)))
     .returning()
     .get()
 

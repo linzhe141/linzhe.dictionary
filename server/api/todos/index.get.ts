@@ -1,5 +1,5 @@
 export default eventHandler(async () => {
-  const todos = await useDrizzle().select().from(tables.todos).all()
+  const todos = await db.select().from(schema.todos).all()
 
   return todos
 })

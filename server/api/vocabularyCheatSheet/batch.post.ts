@@ -1,4 +1,5 @@
 import type { VocabularyCheatSheet } from '~~/server/utils/drizzle'
+import { db, schema } from 'hub:db'
 
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
@@ -10,15 +11,15 @@ export default eventHandler(async (event) => {
   }
   for (const item of params) {
     const { word, symbols, trans } = item
-    const words = await useDrizzle()
+    const words = await db
       .select()
-      .from(tables.vocabularyCheatSheet)
-      .where(eq(tables.vocabularyCheatSheet.userId, userId))
+      .from(schema.vocabularyCheatSheet)
+      .where(eq(schema.vocabularyCheatSheet.userId, userId))
       .all()
     if (words.find((i) => i.word === word)) {
       data.error.push(item)
     } else {
-      await useDrizzle().insert(tables.vocabularyCheatSheet).values({
+      await db.insert(schema.vocabularyCheatSheet).values({
         word,
         symbols,
         trans,

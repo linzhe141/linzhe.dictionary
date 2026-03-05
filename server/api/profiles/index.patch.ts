@@ -1,29 +1,31 @@
+import { db, schema } from 'hub:db'
+
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
   const userId = event.context.user.id
   const { nickname, bio, bgImage, avatarImage }: any = await readBody(event)
-  const data = await useDrizzle()
+  const data = await db
     .select()
-    .from(tables.profiles)
-    .where(eq(tables.profiles.userId, userId))
+    .from(schema.profiles)
+    .where(eq(schema.profiles.userId, userId))
     .get()
   if (data) {
-    const profile = await useDrizzle()
-      .update(tables.profiles)
+    const profile = await db
+      .update(schema.profiles)
       .set({
         nickname,
         bio,
         bgImage,
         avatarImage,
       })
-      .where(eq(tables.profiles.userId, userId))
+      .where(eq(schema.profiles.userId, userId))
       .returning()
       .get()
 
     return profile
   } else {
-    const profile = await useDrizzle()
-      .insert(tables.profiles)
+    const profile = await db
+      .insert(schema.profiles)
       .values({
         nickname,
         bio,

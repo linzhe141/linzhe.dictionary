@@ -3,10 +3,10 @@ import type { User } from '~~/server/utils/drizzle'
 export default eventHandler(async (event) => {
   const { name, password }: User = await readBody(event)
 
-  const user = await useDrizzle()
+  const user = await db
     .select()
-    .from(tables.users)
-    .where(eq(tables.users.name, name))
+    .from(schema.users)
+    .where(eq(schema.users.name, name))
     .get()
   if (!user || user.password !== password) {
     return {

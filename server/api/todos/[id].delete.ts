@@ -1,9 +1,9 @@
 export default eventHandler(async (event) => {
   const { id } = getRouterParams(event)
 
-  const deletedTodo = await useDrizzle()
-    .delete(tables.todos)
-    .where(and(eq(tables.todos.id, Number(id))))
+  const deletedTodo = await db
+    .delete(schema.todos)
+    .where(and(eq(schema.todos.id, Number(id))))
     .returning()
     .get()
 

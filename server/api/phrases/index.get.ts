@@ -1,4 +1,5 @@
 import { desc, eq, count } from 'drizzle-orm'
+import { db, schema } from 'hub:db'
 
 export default eventHandler(async (event) => {
   await isAuth(event.context.user)
@@ -12,20 +13,18 @@ export default eventHandler(async (event) => {
   // 计算偏移量
   const offset = (page - 1) * limit
 
-  const db = useDrizzle()
-
   // 获取总数（使用 count 查询）
   const [{ total }] = await db
     .select({ total: count() })
-    .from(tables.phrases)
-    .where(eq(tables.phrases.userId, userId))
+    .from(schema.phrases)
+    .where(eq(schema.phrases.userId, userId))
 
   // 获取当前页数据
   const data = await db
     .select()
-    .from(tables.phrases)
-    .where(eq(tables.phrases.userId, userId))
-    .orderBy(desc(tables.phrases.id))
+    .from(schema.phrases)
+    .where(eq(schema.phrases.userId, userId))
+    .orderBy(desc(schema.phrases.id))
     .limit(limit)
     .offset(offset)
 
